@@ -42,10 +42,10 @@ AC_DEFUN([AX_LIB_EXPAT],
         ),
         [
         if test "$withval" = "yes"; then
-            if test -f /usr/local/include/expat.h ; then 
-                expat_prefix=/usr/local
-            elif test -f /usr/include/expat.h ; then
-                expat_prefix=/usr
+            if test -f ${prefix}/local/include/expat.h ; then 
+                expat_prefix=${prefix}/local
+            elif test -f ${prefix}/include/expat.h ; then
+                expat_prefix=${prefix}
             else
                 expat_prefix=""
             fi
@@ -60,10 +60,10 @@ AC_DEFUN([AX_LIB_EXPAT],
         ],
         [
         dnl Default behavior is implicit yes
-        if test -f /usr/local/include/expat.h ; then 
-            expat_prefix=/usr/local
-        elif test -f /usr/include/expat.h ; then
-            expat_prefix=/usr
+        if test -f ${prefix}/local/include/expat.h ; then 
+            expat_prefix=${prefix}/local
+        elif test -f ${prefix}/include/expat.h ; then
+            expat_prefix=${prefix}
         else
             expat_prefix="" 
         fi
@@ -113,7 +113,7 @@ AC_DEFUN([AX_LIB_EXPAT],
         if test -n "$expat_lib_flags"; then
             AC_CHECK_LIB(expat,XML_ParserCreate,run_expat_test="yes",run_expat_test="no",$expat_lib_flags)
         else
-            if test "$expat_prefix" = "/usr"; then
+            if test "$expat_prefix" = "${prefix}"; then
                 AC_CHECK_LIB(expat,XML_ParserCreate,run_expat_test="yes",run_expat_test="no",)
                 if test "$run_expat_test" = "yes"; then
                     expat_lib_flags="-lexpat"

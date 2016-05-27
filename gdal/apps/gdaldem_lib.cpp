@@ -104,18 +104,19 @@ typedef enum
 {
     COLOR_SELECTION_INTERPOLATE,
     COLOR_SELECTION_NEAREST_ENTRY,
-    COLOR_SELECTION_EXACT_ENTRY
+    COLOR_SELECTION_EXACT_ENTRY,
+    COLOR_SELECTION_INTERVAL_ENTRY
 } ColorSelectionMode;
 
 struct GDALDEMProcessingOptions
 {
-    /*! output format. The default is GeoTIFF(GTiff). Use the short format name. */
+    /*output format. The default is GeoTIFF(GTiff). Use the short format name. */
     char *pszFormat;
 
-    /*! the progress function to use */
+    /*the progress function to use */
     GDALProgressFunc pfnProgress;
 
-    /*! pointer to the progress data variable */
+    /*pointer to the progress data variable */
     void *pProgressData;
 
     double z;
@@ -1017,44 +1018,46 @@ static int GDALColorReliefGetRGBA (ColorAssociation* pasColorAssociation,
             return TRUE;
         }
     }
-    else
+    else if (pasColorAssociation[i - 1].dfVal == dfVal)
+      {
+        *pnR = pasColorAssociation[i - 1].nR;
+        *pnG = pasColorAssociation[i - 1].nG;
+        *pnB = pasColorAssociation[i - 1].nB;
+        *pnA = pasColorAssociation[i - 1].nA;
+        return TRUE;
+    }
+    else if (eColorSelectionMode == COLOR_SELECTION_EXACT_ENTRY)
     {
-        if (eColorSelectionMode == COLOR_SELECTION_EXACT_ENTRY &&
-            pasColorAssociation[i-1].dfVal != dfVal)
-        {
-            *pnR = 0;
-            *pnG = 0;
-            *pnB = 0;
-            *pnA = 0;
-            return FALSE;
-        }
-
-        if (eColorSelectionMode == COLOR_SELECTION_NEAREST_ENTRY &&
-            pasColorAssociation[i-1].dfVal != dfVal)
-        {
-            int index;
-            if (dfVal - pasColorAssociation[i-1].dfVal <
-                pasColorAssociation[i].dfVal - dfVal)
-                index = i -1;
-            else
-                index = i;
-
-            *pnR = pasColorAssociation[index].nR;
-            *pnG = pasColorAssociation[index].nG;
-            *pnB = pasColorAssociation[index].nB;
-            *pnA = pasColorAssociation[index].nA;
-            return TRUE;
-        }
-
-        if (pasColorAssociation[i-1].dfVal == dfVal)
-        {
-            *pnR = pasColorAssociation[i-1].nR;
-            *pnG = pasColorAssociation[i-1].nG;
-            *pnB = pasColorAssociation[i-1].nB;
-            *pnA = pasColorAssociation[i-1].nA;
-            return TRUE;
-        }
-
+        *pnR = 0;
+        *pnG = 0;
+        *pnB = 0;
+        *pnA = 0;
+        return FALSE;
+    }
+    else if (eColorSelectionMode == COLOR_SELECTION_NEAREST_ENTRY)
+    {
+        int index;
+        if (dfVal - pasColorAssociation[i - 1].dfVal < pasColorAssociation[i].dfVal - dfVal)
+            index = i - 1;
+        else
+            index = i;
+  
+        *pnR = pasColorAssociation[index].nR;
+        *pnG = pasColorAssociation[index].nG;
+        *pnB = pasColorAssociation[index].nB;
+        *pnA = pasColorAssociation[index].nA;
+        return TRUE;
+    }
+    else if (eColorSelectionMode == COLOR_SELECTION_INTERVAL_ENTRY)
+    {
+        *pnR = pasColorAssociation[i].nR;
+        *pnG = pasColorAssociation[i].nG;
+        *pnB = pasColorAssociation[i].nB;
+        *pnA = pasColorAssociation[i].nA;
+        return TRUE;
+    }
+    else // eColorSelectionMode == COLOR_SELECTION_INTERPOLATE
+    {
         double dfRatio = (dfVal - pasColorAssociation[i-1].dfVal) /
             (pasColorAssociation[i].dfVal - pasColorAssociation[i-1].dfVal);
         *pnR = (int)(0.45 + pasColorAssociation[i-1].nR + dfRatio *
@@ -2938,6 +2941,10 @@ GDALDEMProcessingOptions *GDALDEMProcessingOptionsNew(char** papszArgv,
         else if ( EQUAL(papszArgv[i], "-nearest_color_entry"))
         {
             psOptions->eColorSelectionMode = COLOR_SELECTION_NEAREST_ENTRY;
+        }
+        else if ( EQUAL(papszArgv[i], "-interval_color_entry"))
+        {
+            psOptions->eColorSelectionMode = COLOR_SELECTION_INTERVAL_ENTRY;
         }
         else if(
             (EQUAL(papszArgv[i], "--s") ||

@@ -326,8 +326,8 @@ AC_DEFUN([AC_LIB_LINKFLAGS_BODY],
             if test "X$found_so" != "X"; then
               dnl Linking with a shared library. We attempt to hardcode its
               dnl directory into the executable's runpath, unless it's the
-              dnl standard /usr/lib.
-              if test "$enable_rpath" = no || test "X$found_dir" = "X/usr/$acl_libdirstem"; then
+              dnl standard ${prefix}/lib.
+              if test "$enable_rpath" = no || test "X$found_dir" = "X${prefix}/$acl_libdirstem"; then
                 dnl No hardcoding is needed.
                 LIB[]NAME="${LIB[]NAME}${LIB[]NAME:+ }$found_so"
               else
@@ -422,14 +422,14 @@ AC_DEFUN([AC_LIB_LINKFLAGS_BODY],
             if test "X$additional_includedir" != "X"; then
               dnl Potentially add $additional_includedir to $INCNAME.
               dnl But don't add it
-              dnl   1. if it's the standard /usr/include,
-              dnl   2. if it's /usr/local/include and we are using GCC on Linux,
+              dnl   1. if it's the standard ${prefix}/include,
+              dnl   2. if it's ${prefix}/local/include and we are using GCC on Linux,
               dnl   3. if it's already present in $CPPFLAGS or the already
               dnl      constructed $INCNAME,
               dnl   4. if it doesn't exist as a directory.
-              if test "X$additional_includedir" != "X/usr/include"; then
+              if test "X$additional_includedir" != "X${prefix}/include"; then
                 haveit=
-                if test "X$additional_includedir" = "X/usr/local/include"; then
+                if test "X$additional_includedir" = "X${prefix}/local/include"; then
                   if test -n "$GCC"; then
                     case $host_os in
                       linux* | gnu* | k*bsd*-gnu) haveit=yes;;
@@ -471,14 +471,14 @@ AC_DEFUN([AC_LIB_LINKFLAGS_BODY],
                     additional_libdir=`echo "X$dep" | sed -e 's/^X-L//'`
                     dnl Potentially add $additional_libdir to $LIBNAME and $LTLIBNAME.
                     dnl But don't add it
-                    dnl   1. if it's the standard /usr/lib,
-                    dnl   2. if it's /usr/local/lib and we are using GCC on Linux,
+                    dnl   1. if it's the standard ${prefix}/lib,
+                    dnl   2. if it's ${prefix}/local/lib and we are using GCC on Linux,
                     dnl   3. if it's already present in $LDFLAGS or the already
                     dnl      constructed $LIBNAME,
                     dnl   4. if it doesn't exist as a directory.
-                    if test "X$additional_libdir" != "X/usr/$acl_libdirstem"; then
+                    if test "X$additional_libdir" != "X${prefix}/$acl_libdirstem"; then
                       haveit=
-                      if test "X$additional_libdir" = "X/usr/local/$acl_libdirstem"; then
+                      if test "X$additional_libdir" = "X${prefix}/local/$acl_libdirstem"; then
                         if test -n "$GCC"; then
                           case $host_os in
                             linux* | gnu* | k*bsd*-gnu) haveit=yes;;
@@ -653,8 +653,8 @@ AC_DEFUN([AC_LIB_LINKFLAGS_FROM_LIBS],
       for opt in $2; do
         if test -n "$next"; then
           dir="$next"
-          dnl No need to hardcode the standard /usr/lib.
-          if test "X$dir" != "X/usr/$acl_libdirstem"; then
+          dnl No need to hardcode the standard ${prefix}/lib.
+          if test "X$dir" != "X${prefix}/$acl_libdirstem"; then
             rpathdirs="$rpathdirs $dir"
           fi
           next=
@@ -662,8 +662,8 @@ AC_DEFUN([AC_LIB_LINKFLAGS_FROM_LIBS],
           case $opt in
             -L) next=yes ;;
             -L*) dir=`echo "X$opt" | sed -e 's,^X-L,,'`
-                 dnl No need to hardcode the standard /usr/lib.
-                 if test "X$dir" != "X/usr/$acl_libdirstem"; then
+                 dnl No need to hardcode the standard ${prefix}/lib.
+                 if test "X$dir" != "X${prefix}/$acl_libdirstem"; then
                    rpathdirs="$rpathdirs $dir"
                  fi
                  next= ;;

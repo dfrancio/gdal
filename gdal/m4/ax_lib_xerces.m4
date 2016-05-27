@@ -42,10 +42,10 @@ AC_DEFUN([AX_LIB_XERCES],
         ),
         [
         if test "$withval" = "yes"; then
-            if test -d /usr/local/include/xercesc ; then 
-                xerces_prefix=/usr/local
-            elif test -d /usr/include/xercesc ; then
-                xerces_prefix=/usr
+            if test -d ${prefix}/local/include/xercesc ; then 
+                xerces_prefix=${prefix}/local
+            elif test -d ${prefix}/include/xercesc ; then
+                xerces_prefix=${prefix}
             else
                 xerces_prefix=""
             fi
@@ -60,10 +60,10 @@ AC_DEFUN([AX_LIB_XERCES],
         ],
         [
         dnl Default behavior is implicit yes
-        if test -d /usr/local/include/xercesc ; then 
-            xerces_prefix=/usr/local
-        elif test -d /usr/include/xercesc ; then
-            xerces_prefix=/usr
+        if test -d ${prefix}/local/include/xercesc ; then 
+            xerces_prefix=${prefix}/local
+        elif test -d ${prefix}/include/xercesc ; then
+            xerces_prefix=${prefix}
         else
             xerces_prefix="" 
         fi
@@ -97,7 +97,7 @@ AC_DEFUN([AX_LIB_XERCES],
     if test -n "$xerces_prefix" -a -z "$xerces_include_dir" -a -z "$xerces_lib_flags"; then
         xerces_include_dir="$xerces_prefix/include"
         xerces_include_dir2="$xerces_prefix/include/xercesc"
-        if test "$xerces_prefix" = "/usr"; then
+        if test "$xerces_prefix" = "${prefix}"; then
             xerces_lib_flags="-lxerces-c -lpthread"
         else
             xerces_lib_flags="-L$xerces_prefix/lib -lxerces-c -lpthread"

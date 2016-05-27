@@ -1691,7 +1691,7 @@ Optional Packages:
   --with-hide-internal-symbols=ARG Try to hide internal symbols (ARG=yes/no)
   --with-rename-internal-libtiff-symbols=ARG Prefix internal libtiff symbols with gdal_ (ARG=yes/no)
   --with-rename-internal-libgeotiff-symbols=ARG Prefix internal libgeotiff symbols with gdal_ (ARG=yes/no)
-  --with-local=dir      Include /usr/local or other local tree for INCLUDE/LIBS
+  --with-local=dir      Include ${prefix} or other local tree for INCLUDE/LIBS
   --with-threads=ARG    Include thread safe support (ARG=yes(default), no or linkopt)
   --with-libz=ARG       Include libz support (ARG=internal or libz directory)
   --with-gnu-ld           assume the C compiler uses GNU ld default=no
@@ -6657,7 +6657,7 @@ else
   fi
   for lt_tmp_nm in $lt_nm_to_check; do
     lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
-    for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
+    for ac_dir in $PATH ${prefix}/ccs/bin/elf ${prefix}/ccs/bin ${prefix}/ucb /bin; do
       IFS="$lt_save_ifs"
       test -z "$ac_dir" && ac_dir=.
       tmp_nm="$ac_dir/$lt_tmp_nm"
@@ -6906,8 +6906,8 @@ else
     # This has been around since 386BSD, at least.  Likely further.
     if test -x /sbin/sysctl; then
       lt_cv_sys_max_cmd_len=`/sbin/sysctl -n kern.argmax`
-    elif test -x /usr/sbin/sysctl; then
-      lt_cv_sys_max_cmd_len=`/usr/sbin/sysctl -n kern.argmax`
+    elif test -x ${prefix}/sbin/sysctl; then
+      lt_cv_sys_max_cmd_len=`${prefix}/sbin/sysctl -n kern.argmax`
     else
       lt_cv_sys_max_cmd_len=65536	# usable default for all BSDs
     fi
@@ -7035,7 +7035,7 @@ fi
 # test EBCDIC or ASCII
 case `echo X|tr X '\101'` in
  A) # ASCII based system
-    # \n is not interpreted correctly by Solaris 8 /usr/ucb/tr
+    # \n is not interpreted correctly by Solaris 8 ${prefix}/ucb/tr
   lt_SP2NL='tr \040 \012'
   lt_NL2SP='tr \015\012 \040\040'
   ;;
@@ -7294,7 +7294,7 @@ beos*)
 
 bsdi[45]*)
   lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib)'
-  lt_cv_file_magic_cmd='/usr/bin/file -L'
+  lt_cv_file_magic_cmd='${prefix}/bin/file -L'
   lt_cv_file_magic_test_file=/shlib/libc.so
   ;;
 
@@ -7336,8 +7336,8 @@ freebsd* | dragonfly*)
       # Not sure whether the presence of OpenBSD here was a mistake.
       # Let's accept both of them until this is cleared up.
       lt_cv_deplibs_check_method='file_magic (FreeBSD|OpenBSD|DragonFly)/i[3-9]86 (compact )?demand paged shared library'
-      lt_cv_file_magic_cmd=/usr/bin/file
-      lt_cv_file_magic_test_file=`echo /usr/lib/libc.so.*`
+      lt_cv_file_magic_cmd=${prefix}/bin/file
+      lt_cv_file_magic_test_file=`echo ${prefix}/lib/libc.so.*`
       ;;
     esac
   else
@@ -7354,19 +7354,19 @@ haiku*)
   ;;
 
 hpux10.20* | hpux11*)
-  lt_cv_file_magic_cmd=/usr/bin/file
+  lt_cv_file_magic_cmd=${prefix}/bin/file
   case $host_cpu in
   ia64*)
     lt_cv_deplibs_check_method='file_magic (s[0-9][0-9][0-9]|ELF-[0-9][0-9]) shared object file - IA64'
-    lt_cv_file_magic_test_file=/usr/lib/hpux32/libc.so
+    lt_cv_file_magic_test_file=${prefix}/lib/hpux32/libc.so
     ;;
   hppa*64*)
     lt_cv_deplibs_check_method='file_magic (s[0-9][0-9][0-9]|ELF[ -][0-9][0-9])(-bit)?( [LM]SB)? shared object( file)?[, -]* PA-RISC [0-9]\.[0-9]'
-    lt_cv_file_magic_test_file=/usr/lib/pa20_64/libc.sl
+    lt_cv_file_magic_test_file=${prefix}/lib/pa20_64/libc.sl
     ;;
   *)
     lt_cv_deplibs_check_method='file_magic (s[0-9][0-9][0-9]|PA-RISC[0-9]\.[0-9]) shared library'
-    lt_cv_file_magic_test_file=/usr/lib/libc.sl
+    lt_cv_file_magic_test_file=${prefix}/lib/libc.sl
     ;;
   esac
   ;;
@@ -7401,8 +7401,8 @@ netbsd*)
 
 newos6*)
   lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (executable|dynamic lib)'
-  lt_cv_file_magic_cmd=/usr/bin/file
-  lt_cv_file_magic_test_file=/usr/lib/libnls.so
+  lt_cv_file_magic_cmd=${prefix}/bin/file
+  lt_cv_file_magic_test_file=${prefix}/lib/libnls.so
   ;;
 
 *nto* | *qnx*)
@@ -7437,7 +7437,7 @@ sysv4 | sysv4.3*)
   case $host_vendor in
   motorola)
     lt_cv_deplibs_check_method='file_magic ELF [0-9][0-9]*-bit [ML]SB (shared object|dynamic lib) M[0-9][0-9]* Version [0-9]'
-    lt_cv_file_magic_test_file=`echo /usr/lib/libc.so*`
+    lt_cv_file_magic_test_file=`echo ${prefix}/lib/libc.so*`
     ;;
   ncr)
     lt_cv_deplibs_check_method=pass_all
@@ -8458,7 +8458,7 @@ ia64-*-hpux*)
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-    case `/usr/bin/file conftest.$ac_objext` in
+    case `${prefix}/bin/file conftest.$ac_objext` in
       *ELF-32*)
 	HPUX_IA64_MODE="32"
 	;;
@@ -8478,7 +8478,7 @@ ia64-*-hpux*)
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
     if test "$lt_cv_prog_gnu_ld" = yes; then
-      case `/usr/bin/file conftest.$ac_objext` in
+      case `${prefix}/bin/file conftest.$ac_objext` in
 	*32-bit*)
 	  LD="${LD-ld} -melf32bsmip"
 	  ;;
@@ -8490,7 +8490,7 @@ ia64-*-hpux*)
 	;;
       esac
     else
-      case `/usr/bin/file conftest.$ac_objext` in
+      case `${prefix}/bin/file conftest.$ac_objext` in
 	*32-bit*)
 	  LD="${LD-ld} -32"
 	  ;;
@@ -8515,7 +8515,7 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-    case `/usr/bin/file conftest.o` in
+    case `${prefix}/bin/file conftest.o` in
       *32-bit*)
 	case $host in
 	  x86_64-*kfreebsd*-gnu)
@@ -8614,7 +8614,7 @@ sparc*-*solaris*)
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-    case `/usr/bin/file conftest.o` in
+    case `${prefix}/bin/file conftest.o` in
     *64-bit*)
       case $lt_cv_prog_gnu_ld in
       yes*) LD="${LD-ld} -m elf64_sparc" ;;
@@ -9921,7 +9921,7 @@ else
 *)
   lt_save_MAGIC_CMD="$MAGIC_CMD"
   lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
-  ac_dummy="/usr/bin$PATH_SEPARATOR$PATH"
+  ac_dummy="${prefix}/bin$PATH_SEPARATOR$PATH"
   for ac_dir in $ac_dummy; do
     IFS="$lt_save_ifs"
     test -z "$ac_dir" && ac_dir=.
@@ -9987,7 +9987,7 @@ else
 *)
   lt_save_MAGIC_CMD="$MAGIC_CMD"
   lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
-  ac_dummy="/usr/bin$PATH_SEPARATOR$PATH"
+  ac_dummy="${prefix}/bin$PATH_SEPARATOR$PATH"
   for ac_dir in $ac_dummy; do
     IFS="$lt_save_ifs"
     test -z "$ac_dir" && ac_dir=.
@@ -10258,7 +10258,7 @@ lt_prog_compiler_static=
       ;;
 
     sysv4*MP*)
-      if test -d /usr/nec; then
+      if test -d ${prefix}/nec; then
 	lt_prog_compiler_pic=-Kconform_pic
       fi
       ;;
@@ -10424,7 +10424,7 @@ lt_prog_compiler_static=
       ;;
 
     sysv4*MP*)
-      if test -d /usr/nec ;then
+      if test -d ${prefix}/nec ;then
 	lt_prog_compiler_pic='-Kconform_pic'
 	lt_prog_compiler_static='-Bstatic'
       fi
@@ -11238,7 +11238,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
   if test -z "$lt_cv_aix_libpath_"; then
-    lt_cv_aix_libpath_="/usr/lib:/lib"
+    lt_cv_aix_libpath_="${prefix}/lib:/lib"
   fi
 
 fi
@@ -11250,7 +11250,7 @@ fi
         archive_expsym_cmds='$CC -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags `if test "x${allow_undefined_flag}" != "x"; then func_echo_all "${wl}${allow_undefined_flag}"; else :; fi` '"\${wl}$exp_sym_flag:\$export_symbols $shared_flag"
       else
 	if test "$host_cpu" = ia64; then
-	  hardcode_libdir_flag_spec='${wl}-R $libdir:/usr/lib:/lib'
+	  hardcode_libdir_flag_spec='${wl}-R $libdir:${prefix}/lib:/lib'
 	  allow_undefined_flag="-z nodefs"
 	  archive_expsym_cmds="\$CC $shared_flag"' -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags ${wl}${allow_undefined_flag} '"\${wl}$exp_sym_flag:\$export_symbols"
 	else
@@ -11291,7 +11291,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
   if test -z "$lt_cv_aix_libpath_"; then
-    lt_cv_aix_libpath_="/usr/lib:/lib"
+    lt_cv_aix_libpath_="${prefix}/lib:/lib"
   fi
 
 fi
@@ -11447,7 +11447,7 @@ fi
     # does not break anything, and helps significantly (at the cost of a little
     # extra space).
     freebsd2.2*)
-      archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags /usr/lib/c++rt0.o'
+      archive_cmds='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags ${prefix}/lib/c++rt0.o'
       hardcode_libdir_flag_spec='-R$libdir'
       hardcode_direct=yes
       hardcode_shlibpath_var=no
@@ -11657,7 +11657,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
       ;;
 
     openbsd*)
-      if test -f /usr/libexec/ld.so; then
+      if test -f ${prefix}/libexec/ld.so; then
 	hardcode_direct=yes
 	hardcode_shlibpath_var=no
 	hardcode_direct_absolute=yes
@@ -11807,7 +11807,7 @@ $as_echo "$lt_cv_irix_exported_symbol" >&6; }
       ;;
 
     sysv4*MP*)
-      if test -d /usr/nec; then
+      if test -d ${prefix}/nec; then
 	archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
 	hardcode_shlibpath_var=no
 	runpath_var=LD_RUN_PATH
@@ -12187,7 +12187,7 @@ BEGIN {RS=" "; FS="/|\n";} {
   esac
   sys_lib_search_path_spec=`$ECHO "$lt_search_path_spec" | $lt_NL2SP`
 else
-  sys_lib_search_path_spec="/lib /usr/lib /usr/local/lib"
+  sys_lib_search_path_spec="/lib ${prefix}/lib ${prefix}/local/lib"
 fi
 library_names_spec=
 libname_spec='lib$name'
@@ -12201,7 +12201,7 @@ shlibpath_var=
 shlibpath_overrides_runpath=unknown
 version_type=none
 dynamic_linker="$host_os ld.so"
-sys_lib_dlsearch_path_spec="/lib /usr/lib"
+sys_lib_dlsearch_path_spec="/lib ${prefix}/lib"
 need_lib_prefix=unknown
 hardcode_into_libs=no
 
@@ -12291,10 +12291,10 @@ bsdi[45]*)
   soname_spec='${libname}${release}${shared_ext}$major'
   finish_cmds='PATH="\$PATH:/sbin" ldconfig $libdir'
   shlibpath_var=LD_LIBRARY_PATH
-  sys_lib_search_path_spec="/shlib /usr/lib /usr/X11/lib /usr/contrib/lib /lib /usr/local/lib"
-  sys_lib_dlsearch_path_spec="/shlib /usr/lib /usr/local/lib"
-  # the default ld.so.conf also contains /usr/contrib/lib and
-  # /usr/X11R6/lib (/usr/X11 is a link to /usr/X11R6), but let us allow
+  sys_lib_search_path_spec="/shlib ${prefix}/lib ${prefix}/X11/lib ${prefix}/contrib/lib /lib ${prefix}/local/lib"
+  sys_lib_dlsearch_path_spec="/shlib ${prefix}/lib ${prefix}/local/lib"
+  # the default ld.so.conf also contains ${prefix}/contrib/lib and
+  # ${prefix}/X11R6/lib (${prefix}/X11 is a link to ${prefix}/X11R6), but let us allow
   # libtool to hard-code these into programs
   ;;
 
@@ -12328,7 +12328,7 @@ cygwin* | mingw* | pw32* | cegcc*)
       # Cygwin DLLs use 'cyg' prefix rather than 'lib'
       soname_spec='`echo ${libname} | sed -e 's/^lib/cyg/'``echo ${release} | $SED -e 's/[.]/-/g'`${versuffix}${shared_ext}'
 
-      sys_lib_search_path_spec="$sys_lib_search_path_spec /usr/lib/w32api"
+      sys_lib_search_path_spec="$sys_lib_search_path_spec ${prefix}/lib/w32api"
       ;;
     mingw* | cegcc*)
       # MinGW DLLs use traditional 'lib' prefix
@@ -12419,8 +12419,8 @@ darwin* | rhapsody*)
   shlibpath_var=DYLD_LIBRARY_PATH
   shrext_cmds='`test .$module = .yes && echo .so || echo .dylib`'
 
-  sys_lib_search_path_spec="$sys_lib_search_path_spec /usr/local/lib"
-  sys_lib_dlsearch_path_spec='/usr/local/lib /lib /usr/lib'
+  sys_lib_search_path_spec="$sys_lib_search_path_spec ${prefix}/local/lib"
+  sys_lib_dlsearch_path_spec='${prefix}/local/lib /lib ${prefix}/lib'
   ;;
 
 dgux*)
@@ -12439,8 +12439,8 @@ freebsd1*)
 freebsd* | dragonfly*)
   # DragonFly does not have aout.  When/if they implement a new
   # versioning mechanism, adjust this.
-  if test -x /usr/bin/objformat; then
-    objformat=`/usr/bin/objformat`
+  if test -x ${prefix}/bin/objformat; then
+    objformat=`${prefix}/bin/objformat`
   else
     case $host_os in
     freebsd[123]*) objformat=aout ;;
@@ -12519,9 +12519,9 @@ hpux9* | hpux10* | hpux11*)
     library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
     soname_spec='${libname}${release}${shared_ext}$major'
     if test "X$HPUX_IA64_MODE" = X32; then
-      sys_lib_search_path_spec="/usr/lib/hpux32 /usr/local/lib/hpux32 /usr/local/lib"
+      sys_lib_search_path_spec="${prefix}/lib/hpux32 ${prefix}/local/lib/hpux32 ${prefix}/local/lib"
     else
-      sys_lib_search_path_spec="/usr/lib/hpux64 /usr/local/lib/hpux64"
+      sys_lib_search_path_spec="${prefix}/lib/hpux64 ${prefix}/local/lib/hpux64"
     fi
     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
     ;;
@@ -12533,7 +12533,7 @@ hpux9* | hpux10* | hpux11*)
     shlibpath_overrides_runpath=yes # Unless +noenvvar is specified.
     library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
     soname_spec='${libname}${release}${shared_ext}$major'
-    sys_lib_search_path_spec="/usr/lib/pa20_64 /usr/ccs/lib/pa20_64"
+    sys_lib_search_path_spec="${prefix}/lib/pa20_64 ${prefix}/ccs/lib/pa20_64"
     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
     ;;
   *)
@@ -12595,8 +12595,8 @@ irix5* | irix6* | nonstopux*)
   esac
   shlibpath_var=LD_LIBRARY${shlibsuff}_PATH
   shlibpath_overrides_runpath=no
-  sys_lib_search_path_spec="/usr/lib${libsuff} /lib${libsuff} /usr/local/lib${libsuff}"
-  sys_lib_dlsearch_path_spec="/usr/lib${libsuff} /lib${libsuff}"
+  sys_lib_search_path_spec="${prefix}/lib${libsuff} /lib${libsuff} ${prefix}/local/lib${libsuff}"
+  sys_lib_dlsearch_path_spec="${prefix}/lib${libsuff} /lib${libsuff}"
   hardcode_into_libs=yes
   ;;
 
@@ -12658,7 +12658,7 @@ fi
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="/lib ${prefix}/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -12709,7 +12709,7 @@ newsos6)
 
 openbsd*)
   version_type=sunos
-  sys_lib_dlsearch_path_spec="/usr/lib"
+  sys_lib_dlsearch_path_spec="${prefix}/lib"
   need_lib_prefix=no
   # Some older versions of OpenBSD (3.3 at least) *do* need versioned libs.
   case $host_os in
@@ -12749,7 +12749,7 @@ osf3* | osf4* | osf5*)
   soname_spec='${libname}${release}${shared_ext}$major'
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
   shlibpath_var=LD_LIBRARY_PATH
-  sys_lib_search_path_spec="/usr/shlib /usr/ccs/lib /usr/lib/cmplrs/cc /usr/lib /usr/local/lib /var/shlib"
+  sys_lib_search_path_spec="${prefix}/shlib ${prefix}/ccs/lib ${prefix}/lib/cmplrs/cc ${prefix}/lib ${prefix}/local/lib /var/shlib"
   sys_lib_dlsearch_path_spec="$sys_lib_search_path_spec"
   ;;
 
@@ -12773,7 +12773,7 @@ solaris*)
 sunos4*)
   version_type=sunos
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${shared_ext}$versuffix'
-  finish_cmds='PATH="\$PATH:/usr/etc" ldconfig $libdir'
+  finish_cmds='PATH="\$PATH:${prefix}/etc" ldconfig $libdir'
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=yes
   if test "$with_gnu_ld" = yes; then
@@ -12800,13 +12800,13 @@ sysv4 | sysv4.3*)
       need_lib_prefix=no
       need_version=no
       shlibpath_overrides_runpath=no
-      sys_lib_search_path_spec='/lib /usr/lib /usr/ccs/lib'
+      sys_lib_search_path_spec='/lib ${prefix}/lib ${prefix}/ccs/lib'
       ;;
   esac
   ;;
 
 sysv4*MP*)
-  if test -d /usr/nec ;then
+  if test -d ${prefix}/nec ;then
     version_type=linux
     library_names_spec='$libname${shared_ext}.$versuffix $libname${shared_ext}.$major $libname${shared_ext}'
     soname_spec='$libname${shared_ext}.$major'
@@ -12824,16 +12824,16 @@ sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX* | sysv4*uw2*)
   shlibpath_overrides_runpath=yes
   hardcode_into_libs=yes
   if test "$with_gnu_ld" = yes; then
-    sys_lib_search_path_spec='/usr/local/lib /usr/gnu/lib /usr/ccs/lib /usr/lib /lib'
+    sys_lib_search_path_spec='${prefix}/local/lib ${prefix}/gnu/lib ${prefix}/ccs/lib ${prefix}/lib /lib'
   else
-    sys_lib_search_path_spec='/usr/ccs/lib /usr/lib'
+    sys_lib_search_path_spec='${prefix}/ccs/lib ${prefix}/lib'
     case $host_os in
       sco3.2v5*)
         sys_lib_search_path_spec="$sys_lib_search_path_spec /lib"
 	;;
     esac
   fi
-  sys_lib_dlsearch_path_spec='/usr/lib'
+  sys_lib_dlsearch_path_spec='${prefix}/lib'
   ;;
 
 tpf*)
@@ -14176,7 +14176,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
   if test -z "$lt_cv_aix_libpath__CXX"; then
-    lt_cv_aix_libpath__CXX="/usr/lib:/lib"
+    lt_cv_aix_libpath__CXX="${prefix}/lib:/lib"
   fi
 
 fi
@@ -14189,7 +14189,7 @@ fi
           archive_expsym_cmds_CXX='$CC -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags `if test "x${allow_undefined_flag}" != "x"; then func_echo_all "${wl}${allow_undefined_flag}"; else :; fi` '"\${wl}$exp_sym_flag:\$export_symbols $shared_flag"
         else
           if test "$host_cpu" = ia64; then
-	    hardcode_libdir_flag_spec_CXX='${wl}-R $libdir:/usr/lib:/lib'
+	    hardcode_libdir_flag_spec_CXX='${wl}-R $libdir:${prefix}/lib:/lib'
 	    allow_undefined_flag_CXX="-z nodefs"
 	    archive_expsym_cmds_CXX="\$CC $shared_flag"' -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags ${wl}${allow_undefined_flag} '"\${wl}$exp_sym_flag:\$export_symbols"
           else
@@ -14230,7 +14230,7 @@ fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
   if test -z "$lt_cv_aix_libpath__CXX"; then
-    lt_cv_aix_libpath__CXX="/usr/lib:/lib"
+    lt_cv_aix_libpath__CXX="${prefix}/lib:/lib"
   fi
 
 fi
@@ -14768,7 +14768,7 @@ fi
 	;;
 
       openbsd*)
-	if test -f /usr/libexec/ld.so; then
+	if test -f ${prefix}/libexec/ld.so; then
 	  hardcode_direct_CXX=yes
 	  hardcode_shlibpath_var_CXX=no
 	  hardcode_direct_absolute_CXX=yes
@@ -15335,7 +15335,7 @@ lt_prog_compiler_static_CXX=
       # Instead, we relocate shared libraries at runtime.
       ;;
     sysv4*MP*)
-      if test -d /usr/nec; then
+      if test -d ${prefix}/nec; then
 	lt_prog_compiler_pic_CXX=-Kconform_pic
       fi
       ;;
@@ -16036,7 +16036,7 @@ shlibpath_var=
 shlibpath_overrides_runpath=unknown
 version_type=none
 dynamic_linker="$host_os ld.so"
-sys_lib_dlsearch_path_spec="/lib /usr/lib"
+sys_lib_dlsearch_path_spec="/lib ${prefix}/lib"
 need_lib_prefix=unknown
 hardcode_into_libs=no
 
@@ -16126,10 +16126,10 @@ bsdi[45]*)
   soname_spec='${libname}${release}${shared_ext}$major'
   finish_cmds='PATH="\$PATH:/sbin" ldconfig $libdir'
   shlibpath_var=LD_LIBRARY_PATH
-  sys_lib_search_path_spec="/shlib /usr/lib /usr/X11/lib /usr/contrib/lib /lib /usr/local/lib"
-  sys_lib_dlsearch_path_spec="/shlib /usr/lib /usr/local/lib"
-  # the default ld.so.conf also contains /usr/contrib/lib and
-  # /usr/X11R6/lib (/usr/X11 is a link to /usr/X11R6), but let us allow
+  sys_lib_search_path_spec="/shlib ${prefix}/lib ${prefix}/X11/lib ${prefix}/contrib/lib /lib ${prefix}/local/lib"
+  sys_lib_dlsearch_path_spec="/shlib ${prefix}/lib ${prefix}/local/lib"
+  # the default ld.so.conf also contains ${prefix}/contrib/lib and
+  # ${prefix}/X11R6/lib (${prefix}/X11 is a link to ${prefix}/X11R6), but let us allow
   # libtool to hard-code these into programs
   ;;
 
@@ -16253,7 +16253,7 @@ darwin* | rhapsody*)
   shlibpath_var=DYLD_LIBRARY_PATH
   shrext_cmds='`test .$module = .yes && echo .so || echo .dylib`'
 
-  sys_lib_dlsearch_path_spec='/usr/local/lib /lib /usr/lib'
+  sys_lib_dlsearch_path_spec='${prefix}/local/lib /lib ${prefix}/lib'
   ;;
 
 dgux*)
@@ -16272,8 +16272,8 @@ freebsd1*)
 freebsd* | dragonfly*)
   # DragonFly does not have aout.  When/if they implement a new
   # versioning mechanism, adjust this.
-  if test -x /usr/bin/objformat; then
-    objformat=`/usr/bin/objformat`
+  if test -x ${prefix}/bin/objformat; then
+    objformat=`${prefix}/bin/objformat`
   else
     case $host_os in
     freebsd[123]*) objformat=aout ;;
@@ -16352,9 +16352,9 @@ hpux9* | hpux10* | hpux11*)
     library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
     soname_spec='${libname}${release}${shared_ext}$major'
     if test "X$HPUX_IA64_MODE" = X32; then
-      sys_lib_search_path_spec="/usr/lib/hpux32 /usr/local/lib/hpux32 /usr/local/lib"
+      sys_lib_search_path_spec="${prefix}/lib/hpux32 ${prefix}/local/lib/hpux32 ${prefix}/local/lib"
     else
-      sys_lib_search_path_spec="/usr/lib/hpux64 /usr/local/lib/hpux64"
+      sys_lib_search_path_spec="${prefix}/lib/hpux64 ${prefix}/local/lib/hpux64"
     fi
     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
     ;;
@@ -16366,7 +16366,7 @@ hpux9* | hpux10* | hpux11*)
     shlibpath_overrides_runpath=yes # Unless +noenvvar is specified.
     library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
     soname_spec='${libname}${release}${shared_ext}$major'
-    sys_lib_search_path_spec="/usr/lib/pa20_64 /usr/ccs/lib/pa20_64"
+    sys_lib_search_path_spec="${prefix}/lib/pa20_64 ${prefix}/ccs/lib/pa20_64"
     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
     ;;
   *)
@@ -16428,8 +16428,8 @@ irix5* | irix6* | nonstopux*)
   esac
   shlibpath_var=LD_LIBRARY${shlibsuff}_PATH
   shlibpath_overrides_runpath=no
-  sys_lib_search_path_spec="/usr/lib${libsuff} /lib${libsuff} /usr/local/lib${libsuff}"
-  sys_lib_dlsearch_path_spec="/usr/lib${libsuff} /lib${libsuff}"
+  sys_lib_search_path_spec="${prefix}/lib${libsuff} /lib${libsuff} ${prefix}/local/lib${libsuff}"
+  sys_lib_dlsearch_path_spec="${prefix}/lib${libsuff} /lib${libsuff}"
   hardcode_into_libs=yes
   ;;
 
@@ -16491,7 +16491,7 @@ fi
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \$2)); skip = 1; } { if (!skip) print \$0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="/lib ${prefix}/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -16542,7 +16542,7 @@ newsos6)
 
 openbsd*)
   version_type=sunos
-  sys_lib_dlsearch_path_spec="/usr/lib"
+  sys_lib_dlsearch_path_spec="${prefix}/lib"
   need_lib_prefix=no
   # Some older versions of OpenBSD (3.3 at least) *do* need versioned libs.
   case $host_os in
@@ -16582,7 +16582,7 @@ osf3* | osf4* | osf5*)
   soname_spec='${libname}${release}${shared_ext}$major'
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
   shlibpath_var=LD_LIBRARY_PATH
-  sys_lib_search_path_spec="/usr/shlib /usr/ccs/lib /usr/lib/cmplrs/cc /usr/lib /usr/local/lib /var/shlib"
+  sys_lib_search_path_spec="${prefix}/shlib ${prefix}/ccs/lib ${prefix}/lib/cmplrs/cc ${prefix}/lib ${prefix}/local/lib /var/shlib"
   sys_lib_dlsearch_path_spec="$sys_lib_search_path_spec"
   ;;
 
@@ -16606,7 +16606,7 @@ solaris*)
 sunos4*)
   version_type=sunos
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${shared_ext}$versuffix'
-  finish_cmds='PATH="\$PATH:/usr/etc" ldconfig $libdir'
+  finish_cmds='PATH="\$PATH:${prefix}/etc" ldconfig $libdir'
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=yes
   if test "$with_gnu_ld" = yes; then
@@ -16633,13 +16633,13 @@ sysv4 | sysv4.3*)
       need_lib_prefix=no
       need_version=no
       shlibpath_overrides_runpath=no
-      sys_lib_search_path_spec='/lib /usr/lib /usr/ccs/lib'
+      sys_lib_search_path_spec='/lib ${prefix}/lib ${prefix}/ccs/lib'
       ;;
   esac
   ;;
 
 sysv4*MP*)
-  if test -d /usr/nec ;then
+  if test -d ${prefix}/nec ;then
     version_type=linux
     library_names_spec='$libname${shared_ext}.$versuffix $libname${shared_ext}.$major $libname${shared_ext}'
     soname_spec='$libname${shared_ext}.$major'
@@ -16657,16 +16657,16 @@ sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX* | sysv4*uw2*)
   shlibpath_overrides_runpath=yes
   hardcode_into_libs=yes
   if test "$with_gnu_ld" = yes; then
-    sys_lib_search_path_spec='/usr/local/lib /usr/gnu/lib /usr/ccs/lib /usr/lib /lib'
+    sys_lib_search_path_spec='${prefix}/local/lib ${prefix}/gnu/lib ${prefix}/ccs/lib ${prefix}/lib /lib'
   else
-    sys_lib_search_path_spec='/usr/ccs/lib /usr/lib'
+    sys_lib_search_path_spec='${prefix}/ccs/lib ${prefix}/lib'
     case $host_os in
       sco3.2v5*)
         sys_lib_search_path_spec="$sys_lib_search_path_spec /lib"
 	;;
     esac
   fi
-  sys_lib_dlsearch_path_spec='/usr/lib'
+  sys_lib_dlsearch_path_spec='${prefix}/lib'
   ;;
 
 tpf*)
@@ -17099,14 +17099,14 @@ fi
   if test "$LD_SHARED" = "/bin/true" ; then
     echo "checking for ld -shared ... no"
     if test ! -x /bin/true ; then
-      LD_SHARED=/usr/bin/true
+      LD_SHARED=${prefix}/bin/true
     fi
   fi
   if test "$LD_SHARED" = "no" ; then
     if test -x /bin/true ; then
       LD_SHARED=/bin/true
     else
-      LD_SHARED=/usr/bin/true
+      LD_SHARED=${prefix}/bin/true
     fi
   fi
 
@@ -18663,7 +18663,7 @@ fi
 if test "$with_local" != "no" -a "$with_local" != "" ; then
 
   if test "$with_local" = "yes" ; then
-    ADD_PREFIX=/usr/local
+    ADD_PREFIX=${prefix}
   else
     ADD_PREFIX=$with_local
   fi
@@ -19604,7 +19604,7 @@ fi
           if test "X$found_dir" != "X"; then
                         LTLIBICONV="${LTLIBICONV}${LTLIBICONV:+ }-L$found_dir -l$name"
             if test "X$found_so" != "X"; then
-                                                        if test "$enable_rpath" = no || test "X$found_dir" = "X/usr/$acl_libdirstem"; then
+                                                        if test "$enable_rpath" = no || test "X$found_dir" = "X${prefix}/$acl_libdirstem"; then
                                 LIBICONV="${LIBICONV}${LIBICONV:+ }$found_so"
               else
                                                                                 haveit=
@@ -19676,9 +19676,9 @@ fi
                 ;;
             esac
             if test "X$additional_includedir" != "X"; then
-                                                                                                                if test "X$additional_includedir" != "X/usr/include"; then
+                                                                                                                if test "X$additional_includedir" != "X${prefix}/include"; then
                 haveit=
-                if test "X$additional_includedir" = "X/usr/local/include"; then
+                if test "X$additional_includedir" = "X${prefix}/local/include"; then
                   if test -n "$GCC"; then
                     case $host_os in
                       linux* | gnu* | k*bsd*-gnu) haveit=yes;;
@@ -19720,9 +19720,9 @@ fi
                 case "$dep" in
                   -L*)
                     additional_libdir=`echo "X$dep" | sed -e 's/^X-L//'`
-                                                                                                                                                                if test "X$additional_libdir" != "X/usr/$acl_libdirstem"; then
+                                                                                                                                                                if test "X$additional_libdir" != "X${prefix}/$acl_libdirstem"; then
                       haveit=
-                      if test "X$additional_libdir" = "X/usr/local/$acl_libdirstem"; then
+                      if test "X$additional_libdir" = "X${prefix}/local/$acl_libdirstem"; then
                         if test -n "$GCC"; then
                           case $host_os in
                             linux* | gnu* | k*bsd*-gnu) haveit=yes;;
@@ -20309,13 +20309,13 @@ else
   if test -d ${PG_CONFIG} ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "--with-pg argument is a directory.  It should be the path to the pg_config script, often somewhere like /usr/local/pgsql/bin/pg_config." "$LINENO" 5
+      as_fn_error $? "--with-pg argument is a directory.  It should be the path to the pg_config script, often somewhere like ${prefix}/pgsql/bin/pg_config." "$LINENO" 5
   fi
 
   if test \! -x ${PG_CONFIG} ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "--with-pg argument is a not an executable file.  It should be the path to the pg_config script, often somewhere like /usr/local/pgsql/bin/pg_config." "$LINENO" 5
+      as_fn_error $? "--with-pg argument is a not an executable file.  It should be the path to the pg_config script, often somewhere like ${prefix}/pgsql/bin/pg_config." "$LINENO" 5
   fi
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
@@ -20798,8 +20798,8 @@ fi
     echo "libcfitsio not found - FITS support disabled"
   fi
 
-  if test "$FITS_SETTING" = "external" -a -d /usr/include/cfitsio ; then
-    EXTRA_INCLUDES="-I/usr/include/cfitsio $EXTRA_INCLUDES"
+  if test "$FITS_SETTING" = "external" -a -d ${prefix}/include/cfitsio ; then
+    EXTRA_INCLUDES="-I${prefix}/include/cfitsio $EXTRA_INCLUDES"
   fi
 
 else
@@ -21446,12 +21446,12 @@ fi
 
   if test "$GEOTIFF_SETTING" = "external" ; then
 
-        if test -r /usr/include/geotiff.h ; then
+        if test -r ${prefix}/include/geotiff.h ; then
       GEOTIFF_INCLUDE=
-        elif test -r /usr/include/geotiff/geotiff.h ; then
-      GEOTIFF_INCLUDE="-I/usr/include/geotiff"
-        elif test -r /usr/include/libgeotiff/geotiff.h ; then
-      GEOTIFF_INCLUDE="-I/usr/include/libgeotiff"
+        elif test -r ${prefix}/include/geotiff/geotiff.h ; then
+      GEOTIFF_INCLUDE="-I${prefix}/include/geotiff"
+        elif test -r ${prefix}/include/libgeotiff/geotiff.h ; then
+      GEOTIFF_INCLUDE="-I${prefix}/include/libgeotiff"
     else
       for ac_header in geotiff.h
 do :
@@ -21907,14 +21907,14 @@ done
 
 
   if test "$ac_cv_header_ecs_h" = "no" ; then
-    if test -f "/usr/include/ogdi/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/include/ogdi"
-    elif test -f "/usr/local/include/ogdi/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/local/include/ogdi"
-    elif test -f "/usr/include/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/include"
-    elif test -f "/usr/local/include/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/local/include"
+    if test -f "${prefix}/include/ogdi/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include/ogdi"
+    elif test -f "${prefix}/include/ogdi/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include/ogdi"
+    elif test -f "${prefix}/include/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include"
+    elif test -f "${prefix}/include/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include"
     fi
   fi
 
@@ -22220,33 +22220,33 @@ $as_echo_n "checking for libfyba... " >&6; }
     rm -f testfyba
     echo "#include <fyba.h>" > testfyba.cpp
     echo "int main() { LC_Init(); return 0; }" >> testfyba.cpp
-    if test  -r /usr/include/fyba -a -z "`${CXX} ${CPPFLAGS} -I/usr/include/fyba -DLINUX testfyba.cpp -lfyba -lfygm -lfyut -o testfyba 2>&1`" ; then
+    if test  -r ${prefix}/include/fyba -a -z "`${CXX} ${CPPFLAGS} -I${prefix}/include/fyba -DLINUX testfyba.cpp -lfyba -lfygm -lfyut -o testfyba 2>&1`" ; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
 $as_echo "found" >&6; }
         SOSI_ENABLED=yes
         SOSI_LIB="-lfyba -lfygm -lfyut"
-        SOSI_INC="-I/usr/include/fyba"
+        SOSI_INC="-I${prefix}/include/fyba"
     else
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
 $as_echo "not found" >&6; }
-        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libfyba.a, libfygm.a and libfyut.a in /usr/local/lib" >&5
-$as_echo_n "checking for libfyba.a, libfygm.a and libfyut.a in /usr/local/lib... " >&6; }
-        if test -r /usr/local/lib/libfyba.a -a -r /usr/local/lib/libfygm.a -a -r /usr/local/lib/libfyut.a ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libfyba.a, libfygm.a and libfyut.a in ${prefix}/lib" >&5
+$as_echo_n "checking for libfyba.a, libfygm.a and libfyut.a in ${prefix}/lib... " >&6; }
+        if test -r ${prefix}/lib/libfyba.a -a -r ${prefix}/lib/libfygm.a -a -r ${prefix}/lib/libfyut.a ; then
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
 $as_echo "found" >&6; }
             SOSI_ENABLED=yes
-            SOSI_LIB="/usr/local/lib/libfyba.a /usr/local/lib/libfygm.a /usr/local/lib/libfyut.a"
+            SOSI_LIB="${prefix}/lib/libfyba.a ${prefix}/lib/libfygm.a ${prefix}/lib/libfyut.a"
         else
             as_fn_error $? "not found." "$LINENO" 5
         fi
 
-        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for fyba.h, fygm.h and fyut.h in /usr/local/include/fyba" >&5
-$as_echo_n "checking for fyba.h, fygm.h and fyut.h in /usr/local/include/fyba... " >&6; }
-        if test -r /usr/local/include/fyba/fyba.h -a -r /usr/local/include/fyba/fygm.h -a -r /usr/local/include/fyba/fyut.h ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for fyba.h, fygm.h and fyut.h in ${prefix}/include/fyba" >&5
+$as_echo_n "checking for fyba.h, fygm.h and fyut.h in ${prefix}/include/fyba... " >&6; }
+        if test -r ${prefix}/include/fyba/fyba.h -a -r ${prefix}/include/fyba/fygm.h -a -r ${prefix}/include/fyba/fyut.h ; then
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
 $as_echo "found" >&6; }
             SOSI_ENABLED=yes
-            SOSI_INC="-I/usr/local/include/fyba"
+            SOSI_INC="-I${prefix}/include/fyba"
         else
             as_fn_error $? "not found." "$LINENO" 5
         fi
@@ -22395,10 +22395,10 @@ if test x"$with_hdf4" = x"no" ; then
 else
 
   if test x"$with_hdf4" = x"yes" -o x"$with_hdf4" = x"" ; then
-    if test -d /usr/lib64/hdf; then
-      HDF_LIB_DIR="/usr/lib64/hdf"
-    elif test -d /usr/lib/hdf; then
-      HDF_LIB_DIR="/usr/lib/hdf"
+    if test -d ${prefix}/lib64/hdf; then
+      HDF_LIB_DIR="${prefix}/lib64/hdf"
+    elif test -d ${prefix}/lib/hdf; then
+      HDF_LIB_DIR="${prefix}/lib/hdf"
     else
       HDF_LIB_DIR=""
     fi
@@ -22736,8 +22736,8 @@ fi
 
     fi
 
-      if test "$with_hdf4" = "yes" -o "$with_hdf4" = "" -a -r /usr/include/hdf/hdf.h ; then
-      HDF4_INCLUDE="-I/usr/include/hdf"
+      if test "$with_hdf4" = "yes" -o "$with_hdf4" = "" -a -r ${prefix}/include/hdf/hdf.h ; then
+      HDF4_INCLUDE="-I${prefix}/include/hdf"
     elif test -r "$with_hdf4/hdf/hdf.h" ; then
       HDF4_INCLUDE="-I$with_hdf4/hdf"
     elif test -r "$with_hdf4/include/hdf/hdf.h" ; then
@@ -22840,8 +22840,8 @@ fi
     LIBS="-lhdf5 $LIBS"
   fi
 
-  if test "$HAVE_HDF5" = "yes" -a -r /usr/include/hdf5.h ; then
-    HDF5_INCLUDE="-I/usr/include"
+  if test "$HAVE_HDF5" = "yes" -a -r ${prefix}/include/hdf5.h ; then
+    HDF5_INCLUDE="-I${prefix}/include"
   fi
 
 else
@@ -22998,13 +22998,13 @@ else
   if test -d $KEA_CONFIG ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "--with-kea argument is a directory.  It should be the path to the kea_config script, often somewhere like /usr/local/bin/kea_config." "$LINENO" 5
+      as_fn_error $? "--with-kea argument is a directory.  It should be the path to the kea_config script, often somewhere like ${prefix}/bin/kea_config." "$LINENO" 5
   fi
 
   if test \! -x $KEA_CONFIG ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "--with-kea argument is a not an executable file.  It should be the path to the kea_config script, often somewhere like /usr/local/bin/kea_config." "$LINENO" 5
+      as_fn_error $? "--with-kea argument is a not an executable file.  It should be the path to the kea_config script, often somewhere like ${prefix}/bin/kea_config." "$LINENO" 5
   fi
 
   HAVE_KEA=yes
@@ -23255,16 +23255,16 @@ fi
 
   if test "$NETCDF_SETTING" = "yes" ; then
 
-        if test -d /usr/include/netcdf ; then
-      EXTRA_INCLUDES="-I/usr/include/netcdf $EXTRA_INCLUDES"
-      NETCDF_ROOT="/usr"
-        elif test -d /usr/include/netcdf-3 ; then
-      EXTRA_INCLUDES="-I/usr/include/netcdf-3 $EXTRA_INCLUDES"
-      NETCDF_ROOT="/usr"
-        elif test -f /usr/include/netcdf.h ; then
-      NETCDF_ROOT="/usr"
-        elif test -f /usr/local/include/netcdf.h ; then
-      NETCDF_ROOT="/usr/local"
+        if test -d ${prefix}/include/netcdf ; then
+      EXTRA_INCLUDES="-I${prefix}/include/netcdf $EXTRA_INCLUDES"
+      NETCDF_ROOT="${prefix}"
+        elif test -d ${prefix}/include/netcdf-3 ; then
+      EXTRA_INCLUDES="-I${prefix}/include/netcdf-3 $EXTRA_INCLUDES"
+      NETCDF_ROOT="${prefix}"
+        elif test -f ${prefix}/include/netcdf.h ; then
+      NETCDF_ROOT="${prefix}"
+        elif test -f ${prefix}/include/netcdf.h ; then
+      NETCDF_ROOT="${prefix}"
         else
       echo "using pre-installed libnetcdf."
       echo -n "libnetcdf is installed but its location cannot be found, "
@@ -24885,13 +24885,13 @@ else
   if test -d $MYSQL_CONFIG ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config." "$LINENO" 5
+      as_fn_error $? "--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like ${prefix}/bin/mysql_config." "$LINENO" 5
   fi
 
   if test \! -x $MYSQL_CONFIG ; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-      as_fn_error $? "--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config." "$LINENO" 5
+      as_fn_error $? "--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like ${prefix}/bin/mysql_config." "$LINENO" 5
   fi
 
   MYSQL_VERSION="`$MYSQL_CONFIG --version`"
@@ -24962,10 +24962,10 @@ XERCES_REQ_VERSION="2.7.0"
 if test "${with_xerces+set}" = set; then :
   withval=$with_xerces;
         if test "$withval" = "yes"; then
-            if test -d /usr/local/include/xercesc ; then
-                xerces_prefix=/usr/local
-            elif test -d /usr/include/xercesc ; then
-                xerces_prefix=/usr
+            if test -d ${prefix}/local/include/xercesc ; then
+                xerces_prefix=${prefix}/local
+            elif test -d ${prefix}/include/xercesc ; then
+                xerces_prefix=${prefix}
             else
                 xerces_prefix=""
             fi
@@ -24980,10 +24980,10 @@ if test "${with_xerces+set}" = set; then :
 
 else
 
-                if test -d /usr/local/include/xercesc ; then
-            xerces_prefix=/usr/local
-        elif test -d /usr/include/xercesc ; then
-            xerces_prefix=/usr
+                if test -d ${prefix}/local/include/xercesc ; then
+            xerces_prefix=${prefix}/local
+        elif test -d ${prefix}/include/xercesc ; then
+            xerces_prefix=${prefix}
         else
             xerces_prefix=""
         fi
@@ -25020,7 +25020,7 @@ fi
     if test -n "$xerces_prefix" -a -z "$xerces_include_dir" -a -z "$xerces_lib_flags"; then
         xerces_include_dir="$xerces_prefix/include"
         xerces_include_dir2="$xerces_prefix/include/xercesc"
-        if test "$xerces_prefix" = "/usr"; then
+        if test "$xerces_prefix" = "${prefix}"; then
             xerces_lib_flags="-lxerces-c -lpthread"
         else
             xerces_lib_flags="-L$xerces_prefix/lib -lxerces-c -lpthread"
@@ -25263,10 +25263,10 @@ EXPAT_REQ_VERSION="1.95.0"
 if test "${with_expat+set}" = set; then :
   withval=$with_expat;
         if test "$withval" = "yes"; then
-            if test -f /usr/local/include/expat.h ; then
-                expat_prefix=/usr/local
-            elif test -f /usr/include/expat.h ; then
-                expat_prefix=/usr
+            if test -f ${prefix}/local/include/expat.h ; then
+                expat_prefix=${prefix}/local
+            elif test -f ${prefix}/include/expat.h ; then
+                expat_prefix=${prefix}
             else
                 expat_prefix=""
             fi
@@ -25281,10 +25281,10 @@ if test "${with_expat+set}" = set; then :
 
 else
 
-                if test -f /usr/local/include/expat.h ; then
-            expat_prefix=/usr/local
-        elif test -f /usr/include/expat.h ; then
-            expat_prefix=/usr
+                if test -f ${prefix}/local/include/expat.h ; then
+            expat_prefix=${prefix}/local
+        elif test -f ${prefix}/include/expat.h ; then
+            expat_prefix=${prefix}
         else
             expat_prefix=""
         fi
@@ -25378,7 +25378,7 @@ else
 fi
 
         else
-            if test "$expat_prefix" = "/usr"; then
+            if test "$expat_prefix" = "${prefix}"; then
                 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for XML_ParserCreate in -lexpat" >&5
 $as_echo_n "checking for XML_ParserCreate in -lexpat... " >&6; }
 if ${ac_cv_lib_expat_XML_ParserCreate+:} false; then :
@@ -25633,10 +25633,10 @@ LIBKML_REQ_VERSION="1.3.0"
 if test "${with_libkml+set}" = set; then :
   withval=$with_libkml;
         if test "$withval" = "yes"; then
-            if test -d /usr/local/include/kml ; then
-                libkml_prefix=/usr/local
-            elif test -d /usr/include/kml ; then
-                libkml_prefix=/usr
+            if test -d ${prefix}/local/include/kml ; then
+                libkml_prefix=${prefix}/local
+            elif test -d ${prefix}/include/kml ; then
+                libkml_prefix=${prefix}
             else
                 libkml_prefix=""
             fi
@@ -25651,10 +25651,10 @@ if test "${with_libkml+set}" = set; then :
 
 else
 
-                if test -d /usr/local/include/kml ; then
-            libkml_prefix=/usr/local
-        elif test -d /usr/include/kml ; then
-            libkml_prefix=/usr
+                if test -d ${prefix}/local/include/kml ; then
+            libkml_prefix=${prefix}/local
+        elif test -d ${prefix}/include/kml ; then
+            libkml_prefix=${prefix}
         else
             libkml_prefix=""
         fi
@@ -25905,7 +25905,7 @@ $as_echo "$LIBKML_VERSION" >&6; }
             libkml_include_dir="$libkml_prefix/include"
             libkml_include_dir2="$libkml_prefix/include/kml"
             libkml_include_dir3="$libkml_prefix/include/kml/third_party/boost_1_34_1"
-            if test "$libkml_prefix" = "/usr"; then
+            if test "$libkml_prefix" = "${prefix}"; then
                 libkml_lib_flags="-lkmldom -lkmlbase -lkmlengine -lkmlconvenience -lminizip -luriparser"
             else
                 libkml_lib_flags="-L$libkml_prefix/lib -lkmldom -lkmlbase -lkmlengine -lkmlconvenience -lminizip -luriparser"
@@ -26325,12 +26325,12 @@ fi
 done
 
     if test "$ODBC_SETTING" = "no" ; then
-      if test -f /usr/local/include/sql.h ; then
+      if test -f ${prefix}/include/sql.h ; then
         ODBC_SETTING=yes
-        echo "using sql.h from /usr/local/include"
-      elif test -f /usr/include/sql.h ; then
+        echo "using sql.h from ${prefix}/include"
+      elif test -f ${prefix}/include/sql.h ; then
         ODBC_SETTING=yes
-        echo "using sql.h from /usr/include"
+        echo "using sql.h from ${prefix}/include"
       else
         echo "sql.h not found"
       fi
@@ -27160,9 +27160,9 @@ fi
 done
 
     if test "$ac_cv_header_sqlite3_h" = "yes"; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for spatialite.h in /usr/include or /usr/local/include" >&5
-$as_echo_n "checking for spatialite.h in /usr/include or /usr/local/include... " >&6; }
-        if test -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for spatialite.h in ${prefix}/include or ${prefix}/include" >&5
+$as_echo_n "checking for spatialite.h in ${prefix}/include or ${prefix}/include... " >&6; }
+        if test -f "${prefix}/include/spatialite.h" -o -f "${prefix}/include/spatialite.h"; then
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
 $as_echo "found" >&6; }
             { $as_echo "$as_me:${as_lineno-$LINENO}: checking for spatialite_init in -lspatialite" >&5
@@ -27390,7 +27390,7 @@ fi
 
             ac_sqlite3_cppflags="-I$ac_sqlite3_path/include"
         else
-            for ac_sqlite3_path_tmp in /usr /usr/local /opt ; do
+            for ac_sqlite3_path_tmp in ${prefix} ${prefix}/local /opt ; do
                 if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
                     && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
                     ac_sqlite3_path=$ac_sqlite3_path_tmp
@@ -27775,7 +27775,7 @@ fi
 
             ac_sqlite3_cppflags="-I$ac_sqlite3_path/include"
         else
-            for ac_sqlite3_path_tmp in /usr /usr/local /opt ; do
+            for ac_sqlite3_path_tmp in ${prefix} ${prefix}/local /opt ; do
                 if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
                     && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
                     ac_sqlite3_path=$ac_sqlite3_path_tmp
@@ -29178,10 +29178,10 @@ fi
 
     if test "$QHULL_SETTING" = "yes"; then
         QHULL_SETTING=external
-        if test -f /usr/include/qhull/libqhull.h; then
-            EXTRA_INCLUDES="-I/usr/include/qhull $EXTRA_INCLUDES"
+        if test -f ${prefix}/include/qhull/libqhull.h; then
+            EXTRA_INCLUDES="-I${prefix}/include/qhull $EXTRA_INCLUDES"
         else
-            EXTRA_INCLUDES="-I/usr/local/include/qhull $EXTRA_INCLUDES"
+            EXTRA_INCLUDES="-I${prefix}/include/qhull $EXTRA_INCLUDES"
         fi
         LIBS="-lqhull $LIBS"
     fi
@@ -29243,10 +29243,10 @@ fi
 
     if test "$QHULL_SETTING" = "yes"; then
         QHULL_SETTING=external
-        if test -f /usr/include/libqhull/libqhull.h; then
-            EXTRA_INCLUDES="-I/usr/include/libqhull $EXTRA_INCLUDES"
+        if test -f ${prefix}/include/libqhull/libqhull.h; then
+            EXTRA_INCLUDES="-I${prefix}/include/libqhull $EXTRA_INCLUDES"
         else
-            EXTRA_INCLUDES="-I/usr/local/include/libqhull $EXTRA_INCLUDES"
+            EXTRA_INCLUDES="-I${prefix}/include/libqhull $EXTRA_INCLUDES"
         fi
         LIBS="-lqhull $LIBS"
     fi
@@ -30028,10 +30028,10 @@ $as_echo "using pre-installed libjson-c" >&6; }
   LIBS="-ljson-c $LIBS"
   if test "$with_libjson_c" != "" -a "$with_libjson_c" != "yes" -a "$with_libjson_c" != "external" ; then
     JSON_INCLUDE="-I$with_libjson_c/include/json-c"
-  elif test -f "/usr/include/json-c/json.h"; then
-    JSON_INCLUDE="-I/usr/include/json-c"
-  elif test -f "/usr/local/include/json-c/json.h"; then
-    JSON_INCLUDE="-I/usr/local/include/json-c"
+  elif test -f "${prefix}/include/json-c/json.h"; then
+    JSON_INCLUDE="-I${prefix}/include/json-c"
+  elif test -f "${prefix}/include/json-c/json.h"; then
+    JSON_INCLUDE="-I${prefix}/include/json-c"
   else
     as_fn_error $? "could not find json-c/json.h" "$LINENO" 5
   fi
@@ -30117,7 +30117,7 @@ $as_echo_n "checking for poppler... " >&6; }
 if test "$with_poppler" != "no" -a "$with_poppler" != ""; then
 
     if test "$with_poppler" = "yes" ; then
-        TEST_POPPLER_INC="-I/usr/include -I/usr/include/poppler"
+        TEST_POPPLER_INC="-I${prefix}/include -I${prefix}/include/poppler"
         TEST_POPPLER_LIB="-lpoppler"
     else
         TEST_POPPLER_INC="-I$with_poppler/include -I$with_poppler/include/poppler"
@@ -30275,7 +30275,7 @@ fi
 
 
     if test "$with_podofo" = "yes" ; then
-        TEST_PODOFO_INC="-I/usr/include -I/usr/include/podofo"
+        TEST_PODOFO_INC="-I${prefix}/include -I${prefix}/include/podofo"
         PODOFO_LIB="-lpodofo"
     else
         TEST_PODOFO_INC="-I$with_podofo/include -I$with_podofo/include/podofo"
@@ -30379,9 +30379,9 @@ fi
 
 
     if test "$with_pdfium" = "yes" ; then
-        TEST_PDFIUM_INC="-I/usr/include -I/usr/include/pdfium"
+        TEST_PDFIUM_INC="-I${prefix}/include -I${prefix}/include/pdfium"
         PDFIUM_LIB="-lpdfium"
-        PDFIUM_LIBDIR="/usr"
+        PDFIUM_LIBDIR="${prefix}"
     else
         TEST_PDFIUM_INC="-I$with_pdfium -I$with_pdfium/include -I$with_pdfium/include/pdfium"
         PDFIUM_LIB="-L$with_pdfium -L$with_pdfium/lib -lpdfium"
@@ -30903,8 +30903,8 @@ BINTRUE=/bin/true
 if test -f /bin/true.exe ; then
   BINTRUE=/bin/true.exe
 fi
-if test -f /usr/bin/true ; then
-  BINTRUE=/usr/bin/true
+if test -f ${prefix}/bin/true ; then
+  BINTRUE=${prefix}/bin/true
 fi
 
 export BINTRUE
@@ -30921,11 +30921,11 @@ if test "$datadir" = '${datarootdir}' \
   datarootdir='${prefix}/share/gdal'
 fi
 
-mandir='${prefix}/man'
+mandir='${prefix}/share/man'
 
 
 if test "$prefix" = "NONE" ; then
-  GDAL_PREFIX=/usr/local
+  GDAL_PREFIX=${prefix}
 else
   GDAL_PREFIX=${prefix}
 fi
@@ -31094,19 +31094,19 @@ if test "x$with_java" = "xyes"; then
     JAVA_MAC_TEST_DIR=
     case "$host_cpu" in
         i*86*)
-            JAVA_6_TEST_DIR=/usr/lib/jvm/java-6-openjdk-i386
-            JAVA_7_TEST_DIR=/usr/lib/jvm/java-7-openjdk-i386
+            JAVA_6_TEST_DIR=${prefix}/lib/jvm/java-6-openjdk-i386
+            JAVA_7_TEST_DIR=${prefix}/lib/jvm/java-7-openjdk-i386
             ;;
         x86_64*)
-            JAVA_6_TEST_DIR=/usr/lib/jvm/java-6-openjdk-amd64
-            JAVA_7_TEST_DIR=/usr/lib/jvm/java-7-openjdk-amd64
+            JAVA_6_TEST_DIR=${prefix}/lib/jvm/java-6-openjdk-amd64
+            JAVA_7_TEST_DIR=${prefix}/lib/jvm/java-7-openjdk-amd64
             ;;
         *)
             ;;
     esac
     case "${host_os}" in
       darwin*)
-        JAVA_MAC_TEST_DIR=$(/usr/libexec/java_home)
+        JAVA_MAC_TEST_DIR=$(${prefix}/libexec/java_home)
         ;;
     esac
 
@@ -31116,15 +31116,15 @@ if test "x$with_java" = "xyes"; then
     elif test "x$JAVA_6_TEST_DIR" != "x" -a -d "$JAVA_6_TEST_DIR/include"; then
         with_java="$JAVA_6_TEST_DIR"
 
-    elif test -d /usr/lib/jvm/java-6-openjdk; then
-        with_java="/usr/lib/jvm/java-6-openjdk"
+    elif test -d ${prefix}/lib/jvm/java-6-openjdk; then
+        with_java="${prefix}/lib/jvm/java-6-openjdk"
 
-    elif test -d /usr/lib/jvm/java-openjdk; then
-        with_java="/usr/lib/jvm/java-openjdk"
+    elif test -d ${prefix}/lib/jvm/java-openjdk; then
+        with_java="${prefix}/lib/jvm/java-openjdk"
 
 
-    elif test -d /usr/java; then
-        with_java="/usr/java"
+    elif test -d ${prefix}/java; then
+        with_java="${prefix}/java"
 
     elif test "x$JAVA_MAC_TEST_DIR" != "x"; then
         if test -d "$JAVA_MAC_TEST_DIR/bundle"; then
@@ -33688,7 +33688,7 @@ shlibpath_overrides_runpath=$shlibpath_overrides_runpath
 libname_spec=$lt_libname_spec
 
 # List of archive names.  First name is the real one, the rest are links.
-# The last name is the one that the linker finds with -lNAME
+# The last name is the one that the linker finds with -lNAME.
 library_names_spec=$lt_library_names_spec
 
 # The coded name of the library, if different from the real name.
@@ -33804,7 +33804,7 @@ allow_undefined_flag=$lt_allow_undefined_flag
 no_undefined_flag=$lt_no_undefined_flag
 
 # Flag to hardcode \$libdir into a binary during linking.
-# This must work even if \$libdir does not exist
+# This must work even if \$libdir does not exist.
 hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec
 
 # If ld is used when linking, flag to hardcode \$libdir into a binary
@@ -33915,9 +33915,9 @@ ltmain="$ac_aux_dir/ltmain.sh"
   sed -e '/^func_dirname ()$/,/^} # func_dirname /c\
 func_dirname ()\
 {\
-\    case ${1} in\
-\      */*) func_dirname_result="${1%/*}${2}" ;;\
-\      *  ) func_dirname_result="${3}" ;;\
+\    case ${1} in\
+\      */*) func_dirname_result="${1%/*}${2}" ;;\
+\      *  ) func_dirname_result="${3}" ;;\
 \    esac\
 } # Extended-shell func_dirname implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -33938,10 +33938,10 @@ test 0 -eq $? || _lt_function_replace_fail=:
   sed -e '/^func_dirname_and_basename ()$/,/^} # func_dirname_and_basename /c\
 func_dirname_and_basename ()\
 {\
-\    case ${1} in\
-\      */*) func_dirname_result="${1%/*}${2}" ;;\
-\      *  ) func_dirname_result="${3}" ;;\
-\    esac\
+\    case ${1} in\
+\      */*) func_dirname_result="${1%/*}${2}" ;;\
+\      *  ) func_dirname_result="${3}" ;;\
+\    esac\
 \    func_basename_result="${1##*/}"\
 } # Extended-shell func_dirname_and_basename implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -33952,10 +33952,10 @@ test 0 -eq $? || _lt_function_replace_fail=:
   sed -e '/^func_stripname ()$/,/^} # func_stripname /c\
 func_stripname ()\
 {\
-\    # pdksh 5.2.14 does not do ${X%$Y} correctly if both X and Y are\
-\    # positional parameters, so assign one to ordinary parameter first.\
-\    func_stripname_result=${3}\
-\    func_stripname_result=${func_stripname_result#"${1}"}\
+\    # pdksh 5.2.14 does not do ${X%$Y} correctly if both X and Y are\
+\    # positional parameters, so assign one to ordinary parameter first.\
+\    func_stripname_result=${3}\
+\    func_stripname_result=${func_stripname_result#"${1}"}\
 \    func_stripname_result=${func_stripname_result%"${2}"}\
 } # Extended-shell func_stripname implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -33966,7 +33966,7 @@ test 0 -eq $? || _lt_function_replace_fail=:
   sed -e '/^func_split_long_opt ()$/,/^} # func_split_long_opt /c\
 func_split_long_opt ()\
 {\
-\    func_split_long_opt_name=${1%%=*}\
+\    func_split_long_opt_name=${1%%=*}\
 \    func_split_long_opt_arg=${1#*=}\
 } # Extended-shell func_split_long_opt implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -33977,7 +33977,7 @@ test 0 -eq $? || _lt_function_replace_fail=:
   sed -e '/^func_split_short_opt ()$/,/^} # func_split_short_opt /c\
 func_split_short_opt ()\
 {\
-\    func_split_short_opt_arg=${1#??}\
+\    func_split_short_opt_arg=${1#??}\
 \    func_split_short_opt_name=${1%"$func_split_short_opt_arg"}\
 } # Extended-shell func_split_short_opt implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -33988,9 +33988,9 @@ test 0 -eq $? || _lt_function_replace_fail=:
   sed -e '/^func_lo2o ()$/,/^} # func_lo2o /c\
 func_lo2o ()\
 {\
-\    case ${1} in\
-\      *.lo) func_lo2o_result=${1%.lo}.${objext} ;;\
-\      *)    func_lo2o_result=${1} ;;\
+\    case ${1} in\
+\      *.lo) func_lo2o_result=${1%.lo}.${objext} ;;\
+\      *)    func_lo2o_result=${1} ;;\
 \    esac\
 } # Extended-shell func_lo2o implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -34043,7 +34043,7 @@ test 0 -eq $? || _lt_function_replace_fail=:
   sed -e '/^func_append_quoted ()$/,/^} # func_append_quoted /c\
 func_append_quoted ()\
 {\
-\    func_quote_for_eval "${2}"\
+\    func_quote_for_eval "${2}"\
 \    eval "${1}+=\\\\ \\$func_quote_for_eval_result"\
 } # Extended-shell func_append_quoted implementation' "$cfgfile" > $cfgfile.tmp \
   && mv -f "$cfgfile.tmp" "$cfgfile" \
@@ -34150,7 +34150,7 @@ allow_undefined_flag=$lt_allow_undefined_flag_CXX
 no_undefined_flag=$lt_no_undefined_flag_CXX
 
 # Flag to hardcode \$libdir into a binary during linking.
-# This must work even if \$libdir does not exist
+# This must work even if \$libdir does not exist.
 hardcode_libdir_flag_spec=$lt_hardcode_libdir_flag_spec_CXX
 
 # If ld is used when linking, flag to hardcode \$libdir into a binary

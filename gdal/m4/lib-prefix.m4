@@ -53,11 +53,11 @@ AC_DEFUN([AC_LIB_PREFIX],
   if test $use_additional = yes; then
     dnl Potentially add $additional_includedir to $CPPFLAGS.
     dnl But don't add it
-    dnl   1. if it's the standard /usr/include,
+    dnl   1. if it's the standard ${prefix}/include,
     dnl   2. if it's already present in $CPPFLAGS,
-    dnl   3. if it's /usr/local/include and we are using GCC on Linux,
+    dnl   3. if it's ${prefix}/local/include and we are using GCC on Linux,
     dnl   4. if it doesn't exist as a directory.
-    if test "X$additional_includedir" != "X/usr/include"; then
+    if test "X$additional_includedir" != "X${prefix}/include"; then
       haveit=
       for x in $CPPFLAGS; do
         AC_LIB_WITH_FINAL_PREFIX([eval x=\"$x\"])
@@ -67,7 +67,7 @@ AC_DEFUN([AC_LIB_PREFIX],
         fi
       done
       if test -z "$haveit"; then
-        if test "X$additional_includedir" = "X/usr/local/include"; then
+        if test "X$additional_includedir" = "X${prefix}/local/include"; then
           if test -n "$GCC"; then
             case $host_os in
               linux* | gnu* | k*bsd*-gnu) haveit=yes;;
@@ -84,11 +84,11 @@ AC_DEFUN([AC_LIB_PREFIX],
     fi
     dnl Potentially add $additional_libdir to $LDFLAGS.
     dnl But don't add it
-    dnl   1. if it's the standard /usr/lib,
+    dnl   1. if it's the standard ${prefix}/lib,
     dnl   2. if it's already present in $LDFLAGS,
-    dnl   3. if it's /usr/local/lib and we are using GCC on Linux,
+    dnl   3. if it's ${prefix}/local/lib and we are using GCC on Linux,
     dnl   4. if it doesn't exist as a directory.
-    if test "X$additional_libdir" != "X/usr/$acl_libdirstem"; then
+    if test "X$additional_libdir" != "X${prefix}/$acl_libdirstem"; then
       haveit=
       for x in $LDFLAGS; do
         AC_LIB_WITH_FINAL_PREFIX([eval x=\"$x\"])
@@ -98,7 +98,7 @@ AC_DEFUN([AC_LIB_PREFIX],
         fi
       done
       if test -z "$haveit"; then
-        if test "X$additional_libdir" = "X/usr/local/$acl_libdirstem"; then
+        if test "X$additional_libdir" = "X${prefix}/local/$acl_libdirstem"; then
           if test -n "$GCC"; then
             case $host_os in
               linux*) haveit=yes;;

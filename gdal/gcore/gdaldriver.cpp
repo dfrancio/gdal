@@ -362,6 +362,21 @@ GDALDataset *GDALDriver::DefaultCreateCopy( const char * pszFilename,
                                             void * pProgressData )
 
 {
+    return DefaultCreateCopyEx(pszFilename, poSrcDS, bStrict, papszOptions,
+                               pfnProgress, pProgressData, NULL);
+}
+
+/************************************************************************/
+/*                         DefaultCreateCopyEx()                        */
+/************************************************************************/
+GDALDataset *GDALDriver::DefaultCreateCopyEx( const char * pszFilename, 
+                                            GDALDataset * poSrcDS, 
+                                            int bStrict, char ** papszOptions,
+                                            GDALProgressFunc pfnProgress,
+                                            void * pProgressData,
+                                            char ** papszLayerOptions )
+
+{
     if( pfnProgress == NULL )
         pfnProgress = GDALDummyProgress;
 
@@ -638,7 +653,8 @@ GDALDataset *GDALDriver::DefaultCreateCopy( const char * pszFilename,
                 if( poLayer == NULL )
                     continue;
 
-                poDstDS->CopyLayer( poLayer, poLayer->GetName(), NULL );
+                poDstDS->CopyLayer( poLayer, poLayer->GetName(),
+                                    papszLayerOptions );
             }
         }
     }
@@ -715,6 +731,21 @@ GDALDataset *GDALDriver::CreateCopy( const char * pszFilename,
                                      int bStrict, char ** papszOptions,
                                      GDALProgressFunc pfnProgress,
                                      void * pProgressData )
+
+{
+    return CreateCopyEx(pszFilename, poSrcDS, bStrict, papszOptions,
+                        pfnProgress, pProgressData, NULL);
+}
+
+/************************************************************************/
+/*                             CreateCopyEx()                           */
+/************************************************************************/
+GDALDataset *GDALDriver::CreateCopyEx( const char * pszFilename, 
+                                       GDALDataset * poSrcDS, 
+                                       int bStrict, char ** papszOptions,
+                                       GDALProgressFunc pfnProgress,
+                                       void * pProgressData,
+                                       char ** papszLayerOptions )
 
 {
     if( pfnProgress == NULL )
@@ -830,8 +861,9 @@ GDALDataset *GDALDriver::CreateCopy( const char * pszFilename,
     }
     else
     {
-        poDstDS = DefaultCreateCopy( pszFilename, poSrcDS, bStrict,
-                                  papszOptions, pfnProgress, pProgressData );
+        poDstDS = DefaultCreateCopyEx( pszFilename, poSrcDS, bStrict,
+                                       papszOptions, pfnProgress,
+                                       pProgressData, papszLayerOptions);
     }
 
     CSLDestroy(papszOptionsToDelete);

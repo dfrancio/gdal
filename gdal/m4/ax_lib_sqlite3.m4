@@ -9,7 +9,7 @@ dnl of SQLite 3 library. If required version is not passed,
 dnl 3.0.0 is used in the test of existence of SQLite 3.
 dnl
 dnl If no installation prefix to the installed SQLite library is given
-dnl the macro searches under /usr, /usr/local, and /opt.
+dnl the macro searches under ${prefix}, ${prefix}/local, and /opt.
 dnl
 dnl This macro calls:
 dnl
@@ -85,7 +85,7 @@ AC_DEFUN([AX_LIB_SQLITE3],
 
             ac_sqlite3_cppflags="-I$ac_sqlite3_path/include"
         else
-            for ac_sqlite3_path_tmp in /usr /usr/local /opt ; do
+            for ac_sqlite3_path_tmp in ${prefix} ${prefix}/local /opt ; do
                 if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
                     && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
                     ac_sqlite3_path=$ac_sqlite3_path_tmp

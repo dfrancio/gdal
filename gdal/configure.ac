@@ -592,17 +592,17 @@ AC_SUBST(RENAME_INTERNAL_LIBGEOTIFF_SYMBOLS,$with_rename_internal_libgeotiff_sym
 
 
 dnl ---------------------------------------------------------------------------
-dnl Check if user requests /usr/local to be included.
+dnl Check if user requests ${prefix} to be included.
 dnl ---------------------------------------------------------------------------
 
 AC_MSG_CHECKING([for local include/lib path])
 
-AC_ARG_WITH(local,[  --with-local[=dir]      Include /usr/local or other local tree for INCLUDE/LIBS],,)
+AC_ARG_WITH(local,[  --with-local[=dir]      Include ${prefix} or other local tree for INCLUDE/LIBS],,)
 
 if test "$with_local" != "no" -a "$with_local" != "" ; then
 
   if test "$with_local" = "yes" ; then
-    ADD_PREFIX=/usr/local
+    ADD_PREFIX=${prefix}
   else
     ADD_PREFIX=$with_local
   fi
@@ -884,12 +884,12 @@ if test "x$PG_CONFIG" = "xno" ; then
 else
   if test -d ${PG_CONFIG} ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-pg argument is a directory.  It should be the path to the pg_config script, often somewhere like /usr/local/pgsql/bin/pg_config.])
+      AC_MSG_ERROR([--with-pg argument is a directory.  It should be the path to the pg_config script, often somewhere like ${prefix}/pgsql/bin/pg_config.])
   fi
 
   if test \! -x ${PG_CONFIG} ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-pg argument is a not an executable file.  It should be the path to the pg_config script, often somewhere like /usr/local/pgsql/bin/pg_config.])
+      AC_MSG_ERROR([--with-pg argument is a not an executable file.  It should be the path to the pg_config script, often somewhere like ${prefix}/pgsql/bin/pg_config.])
   fi
 
   AC_MSG_RESULT([yes])
@@ -1025,9 +1025,9 @@ elif test "$with_cfitsio" = "yes" -o "$with_cfitsio" = "" ; then
     echo "libcfitsio not found - FITS support disabled"
   fi
 
-dnl Fedora has cfitsio headers in /usr/include/cfitsio
-  if test "$FITS_SETTING" = "external" -a -d /usr/include/cfitsio ; then
-    EXTRA_INCLUDES="-I/usr/include/cfitsio $EXTRA_INCLUDES"
+dnl Fedora has cfitsio headers in ${prefix}/include/cfitsio
+  if test "$FITS_SETTING" = "external" -a -d ${prefix}/include/cfitsio ; then
+    EXTRA_INCLUDES="-I${prefix}/include/cfitsio $EXTRA_INCLUDES"
   fi
 
 else
@@ -1337,14 +1337,14 @@ if test "$with_geotiff" = "yes" -o "$with_geotiff" = "" ; then
   if test "$GEOTIFF_SETTING" = "external" ; then
 
     dnl Now search for headers
-    if test -r /usr/include/geotiff.h ; then
+    if test -r ${prefix}/include/geotiff.h ; then
       GEOTIFF_INCLUDE=
-    dnl Debian (at least some versions of it) install in /usr/include/geotiff
-    elif test -r /usr/include/geotiff/geotiff.h ; then
-      GEOTIFF_INCLUDE="-I/usr/include/geotiff"
-    dnl Fedora and OpenSuse in /usr/include/libgeotiff (#4706)
-    elif test -r /usr/include/libgeotiff/geotiff.h ; then
-      GEOTIFF_INCLUDE="-I/usr/include/libgeotiff"
+    dnl Debian (at least some versions of it) install in ${prefix}/include/geotiff
+    elif test -r ${prefix}/include/geotiff/geotiff.h ; then
+      GEOTIFF_INCLUDE="-I${prefix}/include/geotiff"
+    dnl Fedora and OpenSuse in ${prefix}/include/libgeotiff (#4706)
+    elif test -r ${prefix}/include/libgeotiff/geotiff.h ; then
+      GEOTIFF_INCLUDE="-I${prefix}/include/libgeotiff"
     else
       AC_CHECK_HEADERS([geotiff.h])
       if test "$ac_cv_header_geotiff_h" = "no" ; then
@@ -1574,14 +1574,14 @@ elif test "$with_ogdi" = "yes" -o "$with_ogdi" = "" ; then
   AC_CHECK_HEADERS(ecs.h)
 
   if test "$ac_cv_header_ecs_h" = "no" ; then
-    if test -f "/usr/include/ogdi/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/include/ogdi"
-    elif test -f "/usr/local/include/ogdi/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/local/include/ogdi"
-    elif test -f "/usr/include/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/include"
-    elif test -f "/usr/local/include/ecs.h"; then
-        OGDI_INCLUDE="-I/usr/local/include"
+    if test -f "${prefix}/include/ogdi/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include/ogdi"
+    elif test -f "${prefix}/include/ogdi/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include/ogdi"
+    elif test -f "${prefix}/include/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include"
+    elif test -f "${prefix}/include/ecs.h"; then
+        OGDI_INCLUDE="-I${prefix}/include"
     fi
   fi
 
@@ -1710,27 +1710,27 @@ elif test "$with_sosi" = "yes" ; then
     rm -f testfyba
     echo "#include <fyba.h>" > testfyba.cpp
     echo "int main() { LC_Init(); return 0; }" >> testfyba.cpp
-    if test  -r /usr/include/fyba -a -z "`${CXX} ${CPPFLAGS} -I/usr/include/fyba -DLINUX testfyba.cpp -lfyba -lfygm -lfyut -o testfyba 2>&1`" ; then
+    if test  -r ${prefix}/include/fyba -a -z "`${CXX} ${CPPFLAGS} -I${prefix}/include/fyba -DLINUX testfyba.cpp -lfyba -lfygm -lfyut -o testfyba 2>&1`" ; then
         AC_MSG_RESULT([found])
         SOSI_ENABLED=yes
         SOSI_LIB="-lfyba -lfygm -lfyut"
-        SOSI_INC="-I/usr/include/fyba"
+        SOSI_INC="-I${prefix}/include/fyba"
     else
         AC_MSG_RESULT([not found])
-        AC_MSG_CHECKING([for libfyba.a, libfygm.a and libfyut.a in /usr/local/lib])
-        if test -r /usr/local/lib/libfyba.a -a -r /usr/local/lib/libfygm.a -a -r /usr/local/lib/libfyut.a ; then
+        AC_MSG_CHECKING([for libfyba.a, libfygm.a and libfyut.a in ${prefix}/lib])
+        if test -r ${prefix}/lib/libfyba.a -a -r ${prefix}/lib/libfygm.a -a -r ${prefix}/lib/libfyut.a ; then
             AC_MSG_RESULT([found])
             SOSI_ENABLED=yes
-            SOSI_LIB="/usr/local/lib/libfyba.a /usr/local/lib/libfygm.a /usr/local/lib/libfyut.a"
+            SOSI_LIB="${prefix}/lib/libfyba.a ${prefix}/lib/libfygm.a ${prefix}/lib/libfyut.a"
         else
             AC_MSG_ERROR([not found.])
         fi
 
-        AC_MSG_CHECKING([for fyba.h, fygm.h and fyut.h in /usr/local/include/fyba])
-        if test -r /usr/local/include/fyba/fyba.h -a -r /usr/local/include/fyba/fygm.h -a -r /usr/local/include/fyba/fyut.h ; then
+        AC_MSG_CHECKING([for fyba.h, fygm.h and fyut.h in ${prefix}/include/fyba])
+        if test -r ${prefix}/include/fyba/fyba.h -a -r ${prefix}/include/fyba/fygm.h -a -r ${prefix}/include/fyba/fyut.h ; then
             AC_MSG_RESULT([found])
             SOSI_ENABLED=yes
-            SOSI_INC="-I/usr/local/include/fyba"
+            SOSI_INC="-I${prefix}/include/fyba"
         else
             AC_MSG_ERROR([not found.])
         fi
@@ -1856,11 +1856,11 @@ if test x"$with_hdf4" = x"no" ; then
 else
 
   if test x"$with_hdf4" = x"yes" -o x"$with_hdf4" = x"" ; then
-dnl Fedora has hdf static libraries in /usr/lib/hdf
-    if test -d /usr/lib64/hdf; then
-      HDF_LIB_DIR="/usr/lib64/hdf"
-    elif test -d /usr/lib/hdf; then
-      HDF_LIB_DIR="/usr/lib/hdf"
+dnl Fedora has hdf static libraries in ${prefix}/lib/hdf
+    if test -d ${prefix}/lib64/hdf; then
+      HDF_LIB_DIR="${prefix}/lib64/hdf"
+    elif test -d ${prefix}/lib/hdf; then
+      HDF_LIB_DIR="${prefix}/lib/hdf"
     else
       HDF_LIB_DIR=""
     fi
@@ -1920,8 +1920,8 @@ dnl Not found... again, with -lsz.
     fi
 
   dnl Now search for headers
-    if test "$with_hdf4" = "yes" -o "$with_hdf4" = "" -a -r /usr/include/hdf/hdf.h ; then
-      HDF4_INCLUDE="-I/usr/include/hdf"
+    if test "$with_hdf4" = "yes" -o "$with_hdf4" = "" -a -r ${prefix}/include/hdf/hdf.h ; then
+      HDF4_INCLUDE="-I${prefix}/include/hdf"
     elif test -r "$with_hdf4/hdf/hdf.h" ; then
       HDF4_INCLUDE="-I$with_hdf4/hdf"
     elif test -r "$with_hdf4/include/hdf/hdf.h" ; then
@@ -1980,8 +1980,8 @@ elif test "$with_hdf5" = "yes" -o "$with_hdf5" = "" ; then
   fi
 
 dnl Some Linux distros install hdf include files here.
-  if test "$HAVE_HDF5" = "yes" -a -r /usr/include/hdf5.h ; then
-    HDF5_INCLUDE="-I/usr/include"
+  if test "$HAVE_HDF5" = "yes" -a -r ${prefix}/include/hdf5.h ; then
+    HDF5_INCLUDE="-I${prefix}/include"
   fi
 
 else
@@ -2050,12 +2050,12 @@ if test "$KEA_CONFIG" = "no" ; then
 else
   if test -d $KEA_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-kea argument is a directory.  It should be the path to the kea_config script, often somewhere like /usr/local/bin/kea_config.])
+      AC_MSG_ERROR([--with-kea argument is a directory.  It should be the path to the kea_config script, often somewhere like ${prefix}/bin/kea_config.])
   fi
 
   if test \! -x $KEA_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-kea argument is a not an executable file.  It should be the path to the kea_config script, often somewhere like /usr/local/bin/kea_config.])
+      AC_MSG_ERROR([--with-kea argument is a not an executable file.  It should be the path to the kea_config script, often somewhere like ${prefix}/bin/kea_config.])
   fi
 
   HAVE_KEA=yes
@@ -2140,20 +2140,20 @@ elif test "$with_netcdf" = "yes" -o "$with_netcdf" = "" ; then
 
   if test "$NETCDF_SETTING" = "yes" ; then
 
-    dnl Fedora has netcdf headers in /usr/include/netcdf
-    if test -d /usr/include/netcdf ; then
-      EXTRA_INCLUDES="-I/usr/include/netcdf $EXTRA_INCLUDES"
-      NETCDF_ROOT="/usr"
-    dnl RHEL 5 has netcdf headers in /usr/include/netcdf-3
-    elif test -d /usr/include/netcdf-3 ; then
-      EXTRA_INCLUDES="-I/usr/include/netcdf-3 $EXTRA_INCLUDES"
-      NETCDF_ROOT="/usr"
-    dnl ubuntu and fedora have netcdf headers in /usr/include
-    elif test -f /usr/include/netcdf.h ; then
-      NETCDF_ROOT="/usr"
-    dnl try /usr/local
-    elif test -f /usr/local/include/netcdf.h ; then
-      NETCDF_ROOT="/usr/local"
+    dnl Fedora has netcdf headers in ${prefix}/include/netcdf
+    if test -d ${prefix}/include/netcdf ; then
+      EXTRA_INCLUDES="-I${prefix}/include/netcdf $EXTRA_INCLUDES"
+      NETCDF_ROOT="${prefix}"
+    dnl RHEL 5 has netcdf headers in ${prefix}/include/netcdf-3
+    elif test -d ${prefix}/include/netcdf-3 ; then
+      EXTRA_INCLUDES="-I${prefix}/include/netcdf-3 $EXTRA_INCLUDES"
+      NETCDF_ROOT="${prefix}"
+    dnl ubuntu and fedora have netcdf headers in ${prefix}/include
+    elif test -f ${prefix}/include/netcdf.h ; then
+      NETCDF_ROOT="${prefix}"
+    dnl try ${prefix}
+    elif test -f ${prefix}/include/netcdf.h ; then
+      NETCDF_ROOT="${prefix}"
     dnl print warning if include cannot be found
     else
       echo "using pre-installed libnetcdf."
@@ -2868,12 +2868,12 @@ if test "$MYSQL_CONFIG" = "no" ; then
 else
   if test -d $MYSQL_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config.])
+      AC_MSG_ERROR([--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like ${prefix}/bin/mysql_config.])
   fi
 
   if test \! -x $MYSQL_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config.])
+      AC_MSG_ERROR([--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like ${prefix}/bin/mysql_config.])
   fi
 
   MYSQL_VERSION="`$MYSQL_CONFIG --version`"
@@ -3009,12 +3009,12 @@ elif test "$with_odbc" = "yes" -o "$with_odbc" = "" ; then
 #endif
 ])
     if test "$ODBC_SETTING" = "no" ; then
-      if test -f /usr/local/include/sql.h ; then
+      if test -f ${prefix}/include/sql.h ; then
         ODBC_SETTING=yes
-        echo "using sql.h from /usr/local/include"
-      elif test -f /usr/include/sql.h ; then
+        echo "using sql.h from ${prefix}/include"
+      elif test -f ${prefix}/include/sql.h ; then
         ODBC_SETTING=yes
-        echo "using sql.h from /usr/include"
+        echo "using sql.h from ${prefix}/include"
       else
         echo "sql.h not found"
       fi
@@ -3262,8 +3262,8 @@ if test -z "$with_spatialite" -o "$with_spatialite" = "no"; then
 elif test "$with_spatialite" = "yes"; then
     AC_CHECK_HEADERS(sqlite3.h)
     if test "$ac_cv_header_sqlite3_h" = "yes"; then
-        AC_MSG_CHECKING([for spatialite.h in /usr/include or /usr/local/include])
-        if test -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
+        AC_MSG_CHECKING([for spatialite.h in ${prefix}/include or ${prefix}/include])
+        if test -f "${prefix}/include/spatialite.h" -o -f "${prefix}/include/spatialite.h"; then
             AC_MSG_RESULT(found)
             AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,)
             if test "$SPATIALITE_INIT_FOUND" = "yes"; then
@@ -3649,10 +3649,10 @@ elif test "$with_qhull" = "yes" -o "$with_qhull" = "" ; then
     AC_CHECK_LIB(qhull,qh_new_qhull,QHULL_SETTING=yes,QHULL_SETTING=no,)
     if test "$QHULL_SETTING" = "yes"; then
         QHULL_SETTING=external
-        if test -f /usr/include/qhull/libqhull.h; then
-            EXTRA_INCLUDES="-I/usr/include/qhull $EXTRA_INCLUDES"
+        if test -f ${prefix}/include/qhull/libqhull.h; then
+            EXTRA_INCLUDES="-I${prefix}/include/qhull $EXTRA_INCLUDES"
         else
-            EXTRA_INCLUDES="-I/usr/local/include/qhull $EXTRA_INCLUDES"
+            EXTRA_INCLUDES="-I${prefix}/include/qhull $EXTRA_INCLUDES"
         fi
         LIBS="-lqhull $LIBS"
     fi
@@ -3662,10 +3662,10 @@ elif test "$with_qhull" = "yes" -o "$with_qhull" = "" ; then
     AC_CHECK_LIB(qhull,qh_new_qhull,QHULL_SETTING=yes,QHULL_SETTING=no,)
     if test "$QHULL_SETTING" = "yes"; then
         QHULL_SETTING=external
-        if test -f /usr/include/libqhull/libqhull.h; then
-            EXTRA_INCLUDES="-I/usr/include/libqhull $EXTRA_INCLUDES"
+        if test -f ${prefix}/include/libqhull/libqhull.h; then
+            EXTRA_INCLUDES="-I${prefix}/include/libqhull $EXTRA_INCLUDES"
         else
-            EXTRA_INCLUDES="-I/usr/local/include/libqhull $EXTRA_INCLUDES"
+            EXTRA_INCLUDES="-I${prefix}/include/libqhull $EXTRA_INCLUDES"
         fi
         LIBS="-lqhull $LIBS"
     fi
@@ -3868,10 +3868,10 @@ if test "$LIBJSONC_SETTING" = "external" ; then
   LIBS="-ljson-c $LIBS"
   if test "$with_libjson_c" != "" -a "$with_libjson_c" != "yes" -a "$with_libjson_c" != "external" ; then
     JSON_INCLUDE="-I$with_libjson_c/include/json-c"
-  elif test -f "/usr/include/json-c/json.h"; then
-    JSON_INCLUDE="-I/usr/include/json-c"
-  elif test -f "/usr/local/include/json-c/json.h"; then
-    JSON_INCLUDE="-I/usr/local/include/json-c"
+  elif test -f "${prefix}/include/json-c/json.h"; then
+    JSON_INCLUDE="-I${prefix}/include/json-c"
+  elif test -f "${prefix}/include/json-c/json.h"; then
+    JSON_INCLUDE="-I${prefix}/include/json-c"
   else
     AC_MSG_ERROR([could not find json-c/json.h])
   fi
@@ -3942,7 +3942,7 @@ AC_MSG_CHECKING([for poppler])
 if test "$with_poppler" != "no" -a "$with_poppler" != ""; then
 
     if test "$with_poppler" = "yes" ; then
-        TEST_POPPLER_INC="-I/usr/include -I/usr/include/poppler"
+        TEST_POPPLER_INC="-I${prefix}/include -I${prefix}/include/poppler"
         TEST_POPPLER_LIB="-lpoppler"
     else
         TEST_POPPLER_INC="-I$with_poppler/include -I$with_poppler/include/poppler"
@@ -4071,7 +4071,7 @@ if test "$with_podofo" != "no" -a "$with_podofo" != ""; then
       [  --with-podofo-lib=ARG   podofo Link Flags (i.e. -L/xxx -lpodofo ...). Mainly for static libpodofo],,,)
 
     if test "$with_podofo" = "yes" ; then
-        TEST_PODOFO_INC="-I/usr/include -I/usr/include/podofo"
+        TEST_PODOFO_INC="-I${prefix}/include -I${prefix}/include/podofo"
         PODOFO_LIB="-lpodofo"
     else
         TEST_PODOFO_INC="-I$with_podofo/include -I$with_podofo/include/podofo"
@@ -4162,9 +4162,9 @@ if test "$with_pdfium" != "no" -a "$with_pdfium" != ""; then
       [  --with-pdfium-lib=ARG   pdfium Link Flags (i.e. -L/xxx -lpdfium ...). Mainly for static libpdfium],,,)
 
     if test "$with_pdfium" = "yes" ; then
-        TEST_PDFIUM_INC="-I/usr/include -I/usr/include/pdfium"
+        TEST_PDFIUM_INC="-I${prefix}/include -I${prefix}/include/pdfium"
         PDFIUM_LIB="-lpdfium"
-        PDFIUM_LIBDIR="/usr"
+        PDFIUM_LIBDIR="${prefix}"
     else
         TEST_PDFIUM_INC="-I$with_pdfium -I$with_pdfium/include -I$with_pdfium/include/pdfium"
         PDFIUM_LIB="-L$with_pdfium -L$with_pdfium/lib -lpdfium"
@@ -4418,8 +4418,8 @@ BINTRUE=/bin/true
 if test -f /bin/true.exe ; then
   BINTRUE=/bin/true.exe
 fi
-if test -f /usr/bin/true ; then
-  BINTRUE=/usr/bin/true
+if test -f ${prefix}/bin/true ; then
+  BINTRUE=${prefix}/bin/true
 fi
 
 export BINTRUE
@@ -4441,16 +4441,16 @@ fi
 
 dnl ---------------------------------------------------------------------------
 dnl By default mandir is $datarootdir/man which would be
-dnl /usr/local/share/gdal/man but we want man pages in /usr/local/man.
+dnl ${prefix}/share/gdal/man but we want man pages in ${prefix}/man.
 dnl ---------------------------------------------------------------------------
-mandir='${prefix}/man'
+mandir='${prefix}/share/man'
 
 dnl ---------------------------------------------------------------------------
 dnl Capture GDAL_PREFIX for the cpl_config.h include file.
 dnl ---------------------------------------------------------------------------
 
 if test "$prefix" = "NONE" ; then
-  GDAL_PREFIX=/usr/local
+  GDAL_PREFIX=${prefix}
 else
   GDAL_PREFIX=${prefix}
 fi
@@ -4568,19 +4568,19 @@ dnl Ubuntu
     JAVA_MAC_TEST_DIR=
     case "$host_cpu" in
         i*86*)
-            JAVA_6_TEST_DIR=/usr/lib/jvm/java-6-openjdk-i386
-            JAVA_7_TEST_DIR=/usr/lib/jvm/java-7-openjdk-i386
+            JAVA_6_TEST_DIR=${prefix}/lib/jvm/java-6-openjdk-i386
+            JAVA_7_TEST_DIR=${prefix}/lib/jvm/java-7-openjdk-i386
             ;;
         x86_64*)
-            JAVA_6_TEST_DIR=/usr/lib/jvm/java-6-openjdk-amd64
-            JAVA_7_TEST_DIR=/usr/lib/jvm/java-7-openjdk-amd64
+            JAVA_6_TEST_DIR=${prefix}/lib/jvm/java-6-openjdk-amd64
+            JAVA_7_TEST_DIR=${prefix}/lib/jvm/java-7-openjdk-amd64
             ;;
         *)
             ;;
     esac
     case "${host_os}" in
       darwin*)
-        JAVA_MAC_TEST_DIR=$(/usr/libexec/java_home)
+        JAVA_MAC_TEST_DIR=$(${prefix}/libexec/java_home)
         ;;
     esac
 
@@ -4590,17 +4590,17 @@ dnl Ubuntu
     elif test "x$JAVA_6_TEST_DIR" != "x" -a -d "$JAVA_6_TEST_DIR/include"; then
         with_java="$JAVA_6_TEST_DIR"
 
-    elif test -d /usr/lib/jvm/java-6-openjdk; then
-        with_java="/usr/lib/jvm/java-6-openjdk"
+    elif test -d ${prefix}/lib/jvm/java-6-openjdk; then
+        with_java="${prefix}/lib/jvm/java-6-openjdk"
 
 dnl RHEL6
-    elif test -d /usr/lib/jvm/java-openjdk; then
-        with_java="/usr/lib/jvm/java-openjdk"
+    elif test -d ${prefix}/lib/jvm/java-openjdk; then
+        with_java="${prefix}/lib/jvm/java-openjdk"
 
 
 dnl OpenSolaris
-    elif test -d /usr/java; then
-        with_java="/usr/java"
+    elif test -d ${prefix}/java; then
+        with_java="${prefix}/java"
 
 dnl Mac OS X
     elif test "x$JAVA_MAC_TEST_DIR" != "x"; then

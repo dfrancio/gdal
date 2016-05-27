@@ -1077,7 +1077,7 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
 # ----------------------------------
 # Links a minimal program and checks the executable
 # for the system default hardcoded library path. In most cases,
-# this is /usr/lib:/lib, but when the MPI compilers are used
+# this is ${prefix}/lib:/lib, but when the MPI compilers are used
 # the location of the communication and MPI libs are included too.
 # If we don't find anything, use the default library path according
 # to the aix ld manual.
@@ -1103,7 +1103,7 @@ else
     _LT_TAGVAR([lt_cv_aix_libpath_], [$1])=`dump -HX64 conftest$ac_exeext 2>/dev/null | $SED -n -e "$lt_aix_libpath_sed"`
   fi],[])
   if test -z "$_LT_TAGVAR([lt_cv_aix_libpath_], [$1])"; then
-    _LT_TAGVAR([lt_cv_aix_libpath_], [$1])="/usr/lib:/lib"
+    _LT_TAGVAR([lt_cv_aix_libpath_], [$1])="${prefix}/lib:/lib"
   fi
   ])
   aix_libpath=$_LT_TAGVAR([lt_cv_aix_libpath_], [$1])
@@ -1224,7 +1224,7 @@ ia64-*-hpux*)
   # Find out which ABI we are using.
   echo 'int i;' > conftest.$ac_ext
   if AC_TRY_EVAL(ac_compile); then
-    case `/usr/bin/file conftest.$ac_objext` in
+    case `${prefix}/bin/file conftest.$ac_objext` in
       *ELF-32*)
 	HPUX_IA64_MODE="32"
 	;;
@@ -1240,7 +1240,7 @@ ia64-*-hpux*)
   echo '[#]line '$LINENO' "configure"' > conftest.$ac_ext
   if AC_TRY_EVAL(ac_compile); then
     if test "$lt_cv_prog_gnu_ld" = yes; then
-      case `/usr/bin/file conftest.$ac_objext` in
+      case `${prefix}/bin/file conftest.$ac_objext` in
 	*32-bit*)
 	  LD="${LD-ld} -melf32bsmip"
 	  ;;
@@ -1252,7 +1252,7 @@ ia64-*-hpux*)
 	;;
       esac
     else
-      case `/usr/bin/file conftest.$ac_objext` in
+      case `${prefix}/bin/file conftest.$ac_objext` in
 	*32-bit*)
 	  LD="${LD-ld} -32"
 	  ;;
@@ -1273,7 +1273,7 @@ s390*-*linux*|s390*-*tpf*|sparc*-*linux*)
   # Find out which ABI we are using.
   echo 'int i;' > conftest.$ac_ext
   if AC_TRY_EVAL(ac_compile); then
-    case `/usr/bin/file conftest.o` in
+    case `${prefix}/bin/file conftest.o` in
       *32-bit*)
 	case $host in
 	  x86_64-*kfreebsd*-gnu)
@@ -1334,7 +1334,7 @@ sparc*-*solaris*)
   # Find out which ABI we are using.
   echo 'int i;' > conftest.$ac_ext
   if AC_TRY_EVAL(ac_compile); then
-    case `/usr/bin/file conftest.o` in
+    case `${prefix}/bin/file conftest.o` in
     *64-bit*)
       case $lt_cv_prog_gnu_ld in
       yes*) LD="${LD-ld} -m elf64_sparc" ;;
@@ -1585,8 +1585,8 @@ AC_CACHE_VAL([lt_cv_sys_max_cmd_len], [dnl
     # This has been around since 386BSD, at least.  Likely further.
     if test -x /sbin/sysctl; then
       lt_cv_sys_max_cmd_len=`/sbin/sysctl -n kern.argmax`
-    elif test -x /usr/sbin/sysctl; then
-      lt_cv_sys_max_cmd_len=`/usr/sbin/sysctl -n kern.argmax`
+    elif test -x ${prefix}/sbin/sysctl; then
+      lt_cv_sys_max_cmd_len=`${prefix}/sbin/sysctl -n kern.argmax`
     else
       lt_cv_sys_max_cmd_len=65536	# usable default for all BSDs
     fi
@@ -2161,7 +2161,7 @@ BEGIN {RS=" "; FS="/|\n";} {
   esac
   sys_lib_search_path_spec=`$ECHO "$lt_search_path_spec" | $lt_NL2SP`
 else
-  sys_lib_search_path_spec="/lib /usr/lib /usr/local/lib"
+  sys_lib_search_path_spec="/lib ${prefix}/lib ${prefix}/local/lib"
 fi])
 library_names_spec=
 libname_spec='lib$name'
@@ -2175,7 +2175,7 @@ shlibpath_var=
 shlibpath_overrides_runpath=unknown
 version_type=none
 dynamic_linker="$host_os ld.so"
-sys_lib_dlsearch_path_spec="/lib /usr/lib"
+sys_lib_dlsearch_path_spec="/lib ${prefix}/lib"
 need_lib_prefix=unknown
 hardcode_into_libs=no
 
@@ -2265,10 +2265,10 @@ bsdi[[45]]*)
   soname_spec='${libname}${release}${shared_ext}$major'
   finish_cmds='PATH="\$PATH:/sbin" ldconfig $libdir'
   shlibpath_var=LD_LIBRARY_PATH
-  sys_lib_search_path_spec="/shlib /usr/lib /usr/X11/lib /usr/contrib/lib /lib /usr/local/lib"
-  sys_lib_dlsearch_path_spec="/shlib /usr/lib /usr/local/lib"
-  # the default ld.so.conf also contains /usr/contrib/lib and
-  # /usr/X11R6/lib (/usr/X11 is a link to /usr/X11R6), but let us allow
+  sys_lib_search_path_spec="/shlib ${prefix}/lib ${prefix}/X11/lib ${prefix}/contrib/lib /lib ${prefix}/local/lib"
+  sys_lib_dlsearch_path_spec="/shlib ${prefix}/lib ${prefix}/local/lib"
+  # the default ld.so.conf also contains ${prefix}/contrib/lib and
+  # ${prefix}/X11R6/lib (${prefix}/X11 is a link to ${prefix}/X11R6), but let us allow
   # libtool to hard-code these into programs
   ;;
 
@@ -2302,7 +2302,7 @@ cygwin* | mingw* | pw32* | cegcc*)
       # Cygwin DLLs use 'cyg' prefix rather than 'lib'
       soname_spec='`echo ${libname} | sed -e 's/^lib/cyg/'``echo ${release} | $SED -e 's/[[.]]/-/g'`${versuffix}${shared_ext}'
 m4_if([$1], [],[
-      sys_lib_search_path_spec="$sys_lib_search_path_spec /usr/lib/w32api"])
+      sys_lib_search_path_spec="$sys_lib_search_path_spec ${prefix}/lib/w32api"])
       ;;
     mingw* | cegcc*)
       # MinGW DLLs use traditional 'lib' prefix
@@ -2393,8 +2393,8 @@ darwin* | rhapsody*)
   shlibpath_var=DYLD_LIBRARY_PATH
   shrext_cmds='`test .$module = .yes && echo .so || echo .dylib`'
 m4_if([$1], [],[
-  sys_lib_search_path_spec="$sys_lib_search_path_spec /usr/local/lib"])
-  sys_lib_dlsearch_path_spec='/usr/local/lib /lib /usr/lib'
+  sys_lib_search_path_spec="$sys_lib_search_path_spec ${prefix}/local/lib"])
+  sys_lib_dlsearch_path_spec='${prefix}/local/lib /lib ${prefix}/lib'
   ;;
 
 dgux*)
@@ -2413,8 +2413,8 @@ freebsd1*)
 freebsd* | dragonfly*)
   # DragonFly does not have aout.  When/if they implement a new
   # versioning mechanism, adjust this.
-  if test -x /usr/bin/objformat; then
-    objformat=`/usr/bin/objformat`
+  if test -x ${prefix}/bin/objformat; then
+    objformat=`${prefix}/bin/objformat`
   else
     case $host_os in
     freebsd[[123]]*) objformat=aout ;;
@@ -2493,9 +2493,9 @@ hpux9* | hpux10* | hpux11*)
     library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
     soname_spec='${libname}${release}${shared_ext}$major'
     if test "X$HPUX_IA64_MODE" = X32; then
-      sys_lib_search_path_spec="/usr/lib/hpux32 /usr/local/lib/hpux32 /usr/local/lib"
+      sys_lib_search_path_spec="${prefix}/lib/hpux32 ${prefix}/local/lib/hpux32 ${prefix}/local/lib"
     else
-      sys_lib_search_path_spec="/usr/lib/hpux64 /usr/local/lib/hpux64"
+      sys_lib_search_path_spec="${prefix}/lib/hpux64 ${prefix}/local/lib/hpux64"
     fi
     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
     ;;
@@ -2507,7 +2507,7 @@ hpux9* | hpux10* | hpux11*)
     shlibpath_overrides_runpath=yes # Unless +noenvvar is specified.
     library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
     soname_spec='${libname}${release}${shared_ext}$major'
-    sys_lib_search_path_spec="/usr/lib/pa20_64 /usr/ccs/lib/pa20_64"
+    sys_lib_search_path_spec="${prefix}/lib/pa20_64 ${prefix}/ccs/lib/pa20_64"
     sys_lib_dlsearch_path_spec=$sys_lib_search_path_spec
     ;;
   *)
@@ -2569,8 +2569,8 @@ irix5* | irix6* | nonstopux*)
   esac
   shlibpath_var=LD_LIBRARY${shlibsuff}_PATH
   shlibpath_overrides_runpath=no
-  sys_lib_search_path_spec="/usr/lib${libsuff} /lib${libsuff} /usr/local/lib${libsuff}"
-  sys_lib_dlsearch_path_spec="/usr/lib${libsuff} /lib${libsuff}"
+  sys_lib_search_path_spec="${prefix}/lib${libsuff} /lib${libsuff} ${prefix}/local/lib${libsuff}"
+  sys_lib_dlsearch_path_spec="${prefix}/lib${libsuff} /lib${libsuff}"
   hardcode_into_libs=yes
   ;;
 
@@ -2613,7 +2613,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu)
   # Append ld.so.conf contents to the search path
   if test -f /etc/ld.so.conf; then
     lt_ld_extra=`awk '/^include / { system(sprintf("cd /etc; cat %s 2>/dev/null", \[$]2)); skip = 1; } { if (!skip) print \[$]0; skip = 0; }' < /etc/ld.so.conf | $SED -e 's/#.*//;/^[	 ]*hwcap[	 ]/d;s/[:,	]/ /g;s/=[^=]*$//;s/=[^= ]* / /g;s/"//g;/^$/d' | tr '\n' ' '`
-    sys_lib_dlsearch_path_spec="/lib /usr/lib $lt_ld_extra"
+    sys_lib_dlsearch_path_spec="/lib ${prefix}/lib $lt_ld_extra"
   fi
 
   # We used to test for /lib/ld.so.1 and disable shared libraries on
@@ -2664,7 +2664,7 @@ newsos6)
 
 openbsd*)
   version_type=sunos
-  sys_lib_dlsearch_path_spec="/usr/lib"
+  sys_lib_dlsearch_path_spec="${prefix}/lib"
   need_lib_prefix=no
   # Some older versions of OpenBSD (3.3 at least) *do* need versioned libs.
   case $host_os in
@@ -2704,7 +2704,7 @@ osf3* | osf4* | osf5*)
   soname_spec='${libname}${release}${shared_ext}$major'
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${release}${shared_ext}$major $libname${shared_ext}'
   shlibpath_var=LD_LIBRARY_PATH
-  sys_lib_search_path_spec="/usr/shlib /usr/ccs/lib /usr/lib/cmplrs/cc /usr/lib /usr/local/lib /var/shlib"
+  sys_lib_search_path_spec="${prefix}/shlib ${prefix}/ccs/lib ${prefix}/lib/cmplrs/cc ${prefix}/lib ${prefix}/local/lib /var/shlib"
   sys_lib_dlsearch_path_spec="$sys_lib_search_path_spec"
   ;;
 
@@ -2728,7 +2728,7 @@ solaris*)
 sunos4*)
   version_type=sunos
   library_names_spec='${libname}${release}${shared_ext}$versuffix ${libname}${shared_ext}$versuffix'
-  finish_cmds='PATH="\$PATH:/usr/etc" ldconfig $libdir'
+  finish_cmds='PATH="\$PATH:${prefix}/etc" ldconfig $libdir'
   shlibpath_var=LD_LIBRARY_PATH
   shlibpath_overrides_runpath=yes
   if test "$with_gnu_ld" = yes; then
@@ -2755,13 +2755,13 @@ sysv4 | sysv4.3*)
       need_lib_prefix=no
       need_version=no
       shlibpath_overrides_runpath=no
-      sys_lib_search_path_spec='/lib /usr/lib /usr/ccs/lib'
+      sys_lib_search_path_spec='/lib ${prefix}/lib ${prefix}/ccs/lib'
       ;;
   esac
   ;;
 
 sysv4*MP*)
-  if test -d /usr/nec ;then
+  if test -d ${prefix}/nec ;then
     version_type=linux
     library_names_spec='$libname${shared_ext}.$versuffix $libname${shared_ext}.$major $libname${shared_ext}'
     soname_spec='$libname${shared_ext}.$major'
@@ -2779,16 +2779,16 @@ sysv5* | sco3.2v5* | sco5v6* | unixware* | OpenUNIX* | sysv4*uw2*)
   shlibpath_overrides_runpath=yes
   hardcode_into_libs=yes
   if test "$with_gnu_ld" = yes; then
-    sys_lib_search_path_spec='/usr/local/lib /usr/gnu/lib /usr/ccs/lib /usr/lib /lib'
+    sys_lib_search_path_spec='${prefix}/local/lib ${prefix}/gnu/lib ${prefix}/ccs/lib ${prefix}/lib /lib'
   else
-    sys_lib_search_path_spec='/usr/ccs/lib /usr/lib'
+    sys_lib_search_path_spec='${prefix}/ccs/lib ${prefix}/lib'
     case $host_os in
       sco3.2v5*)
         sys_lib_search_path_spec="$sys_lib_search_path_spec /lib"
 	;;
     esac
   fi
-  sys_lib_dlsearch_path_spec='/usr/lib'
+  sys_lib_dlsearch_path_spec='${prefix}/lib'
   ;;
 
 tpf*)
@@ -2939,10 +2939,10 @@ dnl AC_DEFUN([AC_PATH_TOOL_PREFIX], [])
 # --------------
 # find a file program which can recognize a shared library
 m4_defun([_LT_PATH_MAGIC],
-[_LT_PATH_TOOL_PREFIX(${ac_tool_prefix}file, /usr/bin$PATH_SEPARATOR$PATH)
+[_LT_PATH_TOOL_PREFIX(${ac_tool_prefix}file, ${prefix}/bin$PATH_SEPARATOR$PATH)
 if test -z "$lt_cv_path_MAGIC_CMD"; then
   if test -n "$ac_tool_prefix"; then
-    _LT_PATH_TOOL_PREFIX(file, /usr/bin$PATH_SEPARATOR$PATH)
+    _LT_PATH_TOOL_PREFIX(file, ${prefix}/bin$PATH_SEPARATOR$PATH)
   else
     MAGIC_CMD=:
   fi
@@ -3133,7 +3133,7 @@ beos*)
 
 bsdi[[45]]*)
   lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib)'
-  lt_cv_file_magic_cmd='/usr/bin/file -L'
+  lt_cv_file_magic_cmd='${prefix}/bin/file -L'
   lt_cv_file_magic_test_file=/shlib/libc.so
   ;;
 
@@ -3175,8 +3175,8 @@ freebsd* | dragonfly*)
       # Not sure whether the presence of OpenBSD here was a mistake.
       # Let's accept both of them until this is cleared up.
       lt_cv_deplibs_check_method='file_magic (FreeBSD|OpenBSD|DragonFly)/i[[3-9]]86 (compact )?demand paged shared library'
-      lt_cv_file_magic_cmd=/usr/bin/file
-      lt_cv_file_magic_test_file=`echo /usr/lib/libc.so.*`
+      lt_cv_file_magic_cmd=${prefix}/bin/file
+      lt_cv_file_magic_test_file=`echo ${prefix}/lib/libc.so.*`
       ;;
     esac
   else
@@ -3193,19 +3193,19 @@ haiku*)
   ;;
 
 hpux10.20* | hpux11*)
-  lt_cv_file_magic_cmd=/usr/bin/file
+  lt_cv_file_magic_cmd=${prefix}/bin/file
   case $host_cpu in
   ia64*)
     lt_cv_deplibs_check_method='file_magic (s[[0-9]][[0-9]][[0-9]]|ELF-[[0-9]][[0-9]]) shared object file - IA64'
-    lt_cv_file_magic_test_file=/usr/lib/hpux32/libc.so
+    lt_cv_file_magic_test_file=${prefix}/lib/hpux32/libc.so
     ;;
   hppa*64*)
     [lt_cv_deplibs_check_method='file_magic (s[0-9][0-9][0-9]|ELF[ -][0-9][0-9])(-bit)?( [LM]SB)? shared object( file)?[, -]* PA-RISC [0-9]\.[0-9]']
-    lt_cv_file_magic_test_file=/usr/lib/pa20_64/libc.sl
+    lt_cv_file_magic_test_file=${prefix}/lib/pa20_64/libc.sl
     ;;
   *)
     lt_cv_deplibs_check_method='file_magic (s[[0-9]][[0-9]][[0-9]]|PA-RISC[[0-9]]\.[[0-9]]) shared library'
-    lt_cv_file_magic_test_file=/usr/lib/libc.sl
+    lt_cv_file_magic_test_file=${prefix}/lib/libc.sl
     ;;
   esac
   ;;
@@ -3240,8 +3240,8 @@ netbsd*)
 
 newos6*)
   lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (executable|dynamic lib)'
-  lt_cv_file_magic_cmd=/usr/bin/file
-  lt_cv_file_magic_test_file=/usr/lib/libnls.so
+  lt_cv_file_magic_cmd=${prefix}/bin/file
+  lt_cv_file_magic_test_file=${prefix}/lib/libnls.so
   ;;
 
 *nto* | *qnx*)
@@ -3276,7 +3276,7 @@ sysv4 | sysv4.3*)
   case $host_vendor in
   motorola)
     lt_cv_deplibs_check_method='file_magic ELF [[0-9]][[0-9]]*-bit [[ML]]SB (shared object|dynamic lib) M[[0-9]][[0-9]]* Version [[0-9]]'
-    lt_cv_file_magic_test_file=`echo /usr/lib/libc.so*`
+    lt_cv_file_magic_test_file=`echo ${prefix}/lib/libc.so*`
     ;;
   ncr)
     lt_cv_deplibs_check_method=pass_all
@@ -3350,7 +3350,7 @@ else
   fi
   for lt_tmp_nm in $lt_nm_to_check; do
     lt_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
-    for ac_dir in $PATH /usr/ccs/bin/elf /usr/ccs/bin /usr/ucb /bin; do
+    for ac_dir in $PATH ${prefix}/ccs/bin/elf ${prefix}/ccs/bin ${prefix}/ucb /bin; do
       IFS="$lt_save_ifs"
       test -z "$ac_dir" && ac_dir=.
       tmp_nm="$ac_dir/$lt_tmp_nm"
@@ -3871,7 +3871,7 @@ m4_if([$1], [CXX], [
       # Instead, we relocate shared libraries at runtime.
       ;;
     sysv4*MP*)
-      if test -d /usr/nec; then
+      if test -d ${prefix}/nec; then
 	_LT_TAGVAR(lt_prog_compiler_pic, $1)=-Kconform_pic
       fi
       ;;
@@ -4216,7 +4216,7 @@ m4_if([$1], [CXX], [
       ;;
 
     sysv4*MP*)
-      if test -d /usr/nec; then
+      if test -d ${prefix}/nec; then
 	_LT_TAGVAR(lt_prog_compiler_pic, $1)=-Kconform_pic
       fi
       ;;
@@ -4383,7 +4383,7 @@ m4_if([$1], [CXX], [
       ;;
 
     sysv4*MP*)
-      if test -d /usr/nec ;then
+      if test -d ${prefix}/nec ;then
 	_LT_TAGVAR(lt_prog_compiler_pic, $1)='-Kconform_pic'
 	_LT_TAGVAR(lt_prog_compiler_static, $1)='-Bstatic'
       fi
@@ -4991,7 +4991,7 @@ _LT_EOF
         _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags `if test "x${allow_undefined_flag}" != "x"; then func_echo_all "${wl}${allow_undefined_flag}"; else :; fi` '"\${wl}$exp_sym_flag:\$export_symbols $shared_flag"
       else
 	if test "$host_cpu" = ia64; then
-	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-R $libdir:/usr/lib:/lib'
+	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-R $libdir:${prefix}/lib:/lib'
 	  _LT_TAGVAR(allow_undefined_flag, $1)="-z nodefs"
 	  _LT_TAGVAR(archive_expsym_cmds, $1)="\$CC $shared_flag"' -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags ${wl}${allow_undefined_flag} '"\${wl}$exp_sym_flag:\$export_symbols"
 	else
@@ -5119,7 +5119,7 @@ _LT_EOF
     # does not break anything, and helps significantly (at the cost of a little
     # extra space).
     freebsd2.2*)
-      _LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags /usr/lib/c++rt0.o'
+      _LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags ${prefix}/lib/c++rt0.o'
       _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
       _LT_TAGVAR(hardcode_direct, $1)=yes
       _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
@@ -5292,7 +5292,7 @@ _LT_EOF
       ;;
 
     openbsd*)
-      if test -f /usr/libexec/ld.so; then
+      if test -f ${prefix}/libexec/ld.so; then
 	_LT_TAGVAR(hardcode_direct, $1)=yes
 	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
 	_LT_TAGVAR(hardcode_direct_absolute, $1)=yes
@@ -5442,7 +5442,7 @@ _LT_EOF
       ;;
 
     sysv4*MP*)
-      if test -d /usr/nec; then
+      if test -d ${prefix}/nec; then
 	_LT_TAGVAR(archive_cmds, $1)='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
 	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
 	runpath_var=LD_RUN_PATH
@@ -5998,7 +5998,7 @@ if test "$_lt_caught_CXX_error" != yes; then
           _LT_TAGVAR(archive_expsym_cmds, $1)='$CC -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags `if test "x${allow_undefined_flag}" != "x"; then func_echo_all "${wl}${allow_undefined_flag}"; else :; fi` '"\${wl}$exp_sym_flag:\$export_symbols $shared_flag"
         else
           if test "$host_cpu" = ia64; then
-	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-R $libdir:/usr/lib:/lib'
+	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='${wl}-R $libdir:${prefix}/lib:/lib'
 	    _LT_TAGVAR(allow_undefined_flag, $1)="-z nodefs"
 	    _LT_TAGVAR(archive_expsym_cmds, $1)="\$CC $shared_flag"' -o $output_objdir/$soname $libobjs $deplibs '"\${wl}$no_entry_flag"' $compiler_flags ${wl}${allow_undefined_flag} '"\${wl}$exp_sym_flag:\$export_symbols"
           else
@@ -6504,7 +6504,7 @@ if test "$_lt_caught_CXX_error" != yes; then
 	;;
 
       openbsd*)
-	if test -f /usr/libexec/ld.so; then
+	if test -f ${prefix}/libexec/ld.so; then
 	  _LT_TAGVAR(hardcode_direct, $1)=yes
 	  _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
 	  _LT_TAGVAR(hardcode_direct_absolute, $1)=yes
@@ -7580,9 +7580,9 @@ done
 IFS=$as_save_IFS
 lt_ac_max=0
 lt_ac_count=0
-# Add /usr/xpg4/bin/sed as it is typically found on Solaris
+# Add ${prefix}/xpg4/bin/sed as it is typically found on Solaris
 # along with /bin/sed that truncates output.
-for lt_ac_sed in $lt_ac_sed_list /usr/xpg4/bin/sed; do
+for lt_ac_sed in $lt_ac_sed_list ${prefix}/xpg4/bin/sed; do
   test ! -f $lt_ac_sed && continue
   cat /dev/null > conftest.in
   lt_ac_count=0
@@ -7656,7 +7656,7 @@ _LT_DECL([], [lt_unset], [0], [whether the shell understands "unset"])dnl
 # test EBCDIC or ASCII
 case `echo X|tr X '\101'` in
  A) # ASCII based system
-    # \n is not interpreted correctly by Solaris 8 /usr/ucb/tr
+    # \n is not interpreted correctly by Solaris 8 ${prefix}/ucb/tr
   lt_SP2NL='tr \040 \012'
   lt_NL2SP='tr \015\012 \040\040'
   ;;
