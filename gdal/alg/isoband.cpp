@@ -193,14 +193,59 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
     }
 
     //--------------------------------------------------------------------
+    // If no contour was provided, then write the boundary itself
+    //--------------------------------------------------------------------
+    if (!pContours)
+    {
+        OGRGeometry *pPolygon = pInfo->pBoundary->clone();
+        if (!pPolygon)
+        {
+            CPLError(CE_Failure, CPLE_AppDefined,
+                     "could not clone boundary geometry");
+            return CE_Failure;
+        }
+
+        OGRFeature *pFeature = OGRFeature::CreateFeature(
+            pInfo->pLayer->GetLayerDefn());
+        if (!pFeature)
+        {
+            OGRGeometryFactory::destroyGeometry(pPolygon);
+            CPLError(CE_Failure, CPLE_AppDefined,
+                     "could not create polygon feature");
+            return CE_Failure;
+        }
+
+        pFeature->SetGeometryDirectly(pPolygon);
+
+        OGRErr eErr = pInfo->pLayer->CreateFeature(pFeature);
+        OGRFeature::DestroyFeature(pFeature);
+        if (eErr != OGRERR_NONE)
+        {
+            CPLError(CE_Failure, CPLE_AppDefined,
+                     "could not write polygon to the output layer");
+            return CE_Failure;
+        }
+
+        if (!pInfo->pfnProgress(1.0, "", pInfo->pProgressArg))
+        {
+            CPLError(CE_Failure, CPLE_UserInterrupt, "User terminated");
+            return CE_Failure;
+        }
+
+        return CE_None;
+    }
+
+    //--------------------------------------------------------------------
     // Get GEOS representations of the geometries
     //--------------------------------------------------------------------
     GEOSContextHandle_t hGEOSCtxt = OGRGeometry::createGEOSContext();
     GEOSGeom hBoundaryGeosGeom =
         pInfo->pBoundary->exportToGEOS(hGEOSCtxt);
-    GEOSGeom hContoursGeosGeom = pContours->exportToGEOS(hGEOSCtxt);
+    GEOSGeom hContoursGeosGeom =
+        pContours ? pContours->exportToGEOS(hGEOSCtxt) :
+                    GEOSGeom_createEmptyLineString_r(hGEOSCtxt);
 
-    if (hBoundaryGeosGeom == NULL || hContoursGeosGeom == NULL)
+    if (!hBoundaryGeosGeom || !hContoursGeosGeom)
     {
         CPLError(CE_Failure, CPLE_ObjectNull,
                  "could not create GEOS geometries");
@@ -242,7 +287,7 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
                                           hBoundaryLineGeosGeom);
     GEOSGeom_destroy_r(hGEOSCtxt, hContoursGeosGeom);
     GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryLineGeosGeom);
-    if (hNodedGeometry == NULL)
+    if (!hNodedGeometry)
     {
         GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
         OGRGeometry::freeGEOSContext(hGEOSCtxt);
@@ -259,7 +304,7 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
 
     GEOSGeom hPolygons = GEOSPolygonize_r(hGEOSCtxt, &hNodedGeometry, 1);
     GEOSGeom_destroy_r(hGEOSCtxt, hNodedGeometry);
-    if (hPolygons == NULL)
+    if (!hPolygons)
     {
         GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
         OGRGeometry::freeGEOSContext(hGEOSCtxt);
@@ -310,7 +355,7 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
         GEOSGeom hIntersection = GEOSIntersection_r(hGEOSCtxt,
                                                     hBoundaryGeosGeom,
                                                     hPolygon);
-        if (hIntersection == NULL)
+        if (!hIntersection)
         {
             GEOSGeom_destroy_r(hGEOSCtxt, hPolygons);
             GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
@@ -357,7 +402,7 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
         GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
         OGRGeometry::freeGEOSContext(hGEOSCtxt);
         CPLError(CE_Failure, CPLE_AppDefined,
-                 "contour lines did not cut the bounary");
+                 "no polygons to add after splitting");
         return CE_Failure;
     }
 
@@ -369,12 +414,12 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
                                                pInfo->pProgressArg);
     for (std::size_t iGeom = 0; iGeom < oGeometriesToAdd.size(); iGeom++)
     {
-        OGRGeometry *polygon =
+        OGRGeometry *pPolygon =
             OGRGeometryFactory::createFromGEOS(hGEOSCtxt,
                                                oGeometriesToAdd[iGeom]);
         GEOSGeom_destroy_r(hGEOSCtxt, oGeometriesToAdd[iGeom]);
 
-        if (polygon == NULL)
+        if (!pPolygon)
         {
             GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
             OGRGeometry::freeGEOSContext(hGEOSCtxt);
@@ -382,14 +427,14 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
                      "could not create OGR geometry from GEOS geometry");
             return CE_Failure;
         }
-        polygon->assignSpatialReference(
+        pPolygon->assignSpatialReference(
             pInfo->pBoundary->getSpatialReference());
 
-        OGRFeature *feature = OGRFeature::CreateFeature(
+        OGRFeature *pFeature = OGRFeature::CreateFeature(
             pInfo->pLayer->GetLayerDefn());
-        if (feature == NULL)
+        if (!pFeature)
         {
-            OGRGeometryFactory::destroyGeometry(polygon);
+            OGRGeometryFactory::destroyGeometry(pPolygon);
             GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
             OGRGeometry::freeGEOSContext(hGEOSCtxt);
             CPLError(CE_Failure, CPLE_AppDefined,
@@ -397,12 +442,12 @@ static CPLErr OGRDefaultIsobandWriter( OGRGeometry *pContours,
             return CE_Failure;
         }
 
-        feature->SetGeometryDirectly(polygon);
+        pFeature->SetGeometryDirectly(pPolygon);
 
-        OGRErr eErr = pInfo->pLayer->CreateFeature(feature);
+        OGRErr eErr = pInfo->pLayer->CreateFeature(pFeature);
+        OGRFeature::DestroyFeature(pFeature);
         if (eErr != OGRERR_NONE)
         {
-            OGRFeature::DestroyFeature(feature);
             GEOSGeom_destroy_r(hGEOSCtxt, hBoundaryGeosGeom);
             OGRGeometry::freeGEOSContext(hGEOSCtxt);
             CPLError(CE_Failure, CPLE_AppDefined,
@@ -620,7 +665,7 @@ static CPLErr OGRDefaultIsobandClassifier( int nGeomCount,
     // geometries
     //--------------------------------------------------------------------
     GDALDriverH hMemoryDriver = GDALGetDriverByName("MEM");
-    if (hMemoryDriver == NULL)
+    if (!hMemoryDriver)
     {
         CPLError(CE_Failure, CPLE_ObjectNull, "could not get MEM driver");
         return CE_Failure;
@@ -697,10 +742,10 @@ static CPLErr OGRDefaultIsobandClassifier( int nGeomCount,
         papszRasterizeOptions = CSLSetNameValue(papszRasterizeOptions,
                                                 "ALL_TOUCHED", "TRUE");
 
+    OGRGeometryH *pahIsobands = (OGRGeometryH *)papoIsobands;
     eErr = GDALRasterizeGeometries(pMemoryDataset, 1, &nTargetBand,
-                                   nGeomCount, (void **)papoIsobands,
-                                   NULL, NULL, padfClasses,
-                                   papszRasterizeOptions,
+                                   nGeomCount, pahIsobands, NULL, NULL,
+                                   padfClasses, papszRasterizeOptions,
                                    pInfo->pfnProgress,
                                    pInfo->pProgressArg);
     CSLDestroy(papszRasterizeOptions);
