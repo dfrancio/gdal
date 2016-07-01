@@ -1,2 +1,4 @@
 # Denote all files and directories that should not be added to archive files
+.gitattributes export-ignore
+.travis.yml export-ignore
 autotest export-ignore
