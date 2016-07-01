@@ -1,0 +1,2 @@
+# Denote all files and directories that should not be added to archive files
+autotest export-ignore
