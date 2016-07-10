@@ -1,5 +1,4 @@
 /******************************************************************************
- * $Id$
  *
  * Project:  GDAL Core
  * Purpose:  Base class for raster file formats.
@@ -2331,7 +2330,7 @@ char **GDALDataset::GetFileList()
     }
 
 /* -------------------------------------------------------------------- */
-/*      Do we have a known overview file?                               */
+/*      Do we have a known mask file?                                   */
 /* -------------------------------------------------------------------- */
     if( oOvManager.HaveMaskFile() )
     {
@@ -2344,40 +2343,6 @@ char **GDALDataset::GetFileList()
             ++papszIter;
         }
         CSLDestroy( papszMskList );
-    }
-
-/* -------------------------------------------------------------------- */
-/*      Do we have a world file?                                        */
-/* -------------------------------------------------------------------- */
-    if( bMainFileReal &&
-        !GDALCanFileAcceptSidecarFile(osMainFilename) )
-    {
-        const char* pszExtension = CPLGetExtension( osMainFilename );
-        if( strlen(pszExtension) > 2 )
-        {
-            // first + last + 'w'
-            char szDerivedExtension[4];
-            szDerivedExtension[0] = pszExtension[0];
-            szDerivedExtension[1] = pszExtension[strlen(pszExtension)-1];
-            szDerivedExtension[2] = 'w';
-            szDerivedExtension[3] = '\0';
-            CPLString osWorldFilename = CPLResetExtension( osMainFilename, szDerivedExtension );
-
-            if (oOvManager.papszInitSiblingFiles)
-            {
-                int iSibling = CSLFindString(oOvManager.papszInitSiblingFiles,
-                                             CPLGetFilename(osWorldFilename));
-                if (iSibling >= 0)
-                {
-                    osWorldFilename.resize(strlen(osWorldFilename) -
-                                           strlen(oOvManager.papszInitSiblingFiles[iSibling]));
-                    osWorldFilename += oOvManager.papszInitSiblingFiles[iSibling];
-                    papszList = CSLAddString( papszList, osWorldFilename );
-                }
-            }
-            else if( VSIStatExL( osWorldFilename, &sStat, VSI_STAT_EXISTS_FLAG ) == 0 )
-                papszList = CSLAddString( papszList, osWorldFilename );
-        }
     }
 
     return papszList;

@@ -29,36 +29,32 @@
 
 #include "libkml_headers.h"
 
-#include  <ogrsf_frmts.h>
+#include <string>
+
 #include <ogr_feature.h>
 #include "ogr_p.h"
+#include <ogrsf_frmts.h>
 
-#include <iostream>
-
-using kmldom::ExtendedDataPtr;
-using kmldom::SchemaPtr;
-using kmldom::SchemaDataPtr;
-using kmldom::SimpleDataPtr;
-using kmldom::DataPtr;
-
-using kmldom::TimeStampPtr;
-using kmldom::TimeSpanPtr;
-using kmldom::TimePrimitivePtr;
-using kmldom::SnippetPtr;
-
-using kmldom::PointPtr;
-using kmldom::LineStringPtr;
-using kmldom::PolygonPtr;
-using kmldom::MultiGeometryPtr;
-using kmldom::GeometryPtr;
-
-using kmldom::FeaturePtr;
-using kmldom::GroundOverlayPtr;
-using kmldom::IconPtr;
 using kmldom::CameraPtr;
-
-using kmldom::GxTrackPtr;
+using kmldom::DataPtr;
+using kmldom::ExtendedDataPtr;
+using kmldom::FeaturePtr;
+using kmldom::GeometryPtr;
+using kmldom::GroundOverlayPtr;
 using kmldom::GxMultiTrackPtr;
+using kmldom::GxTrackPtr;
+using kmldom::IconPtr;
+using kmldom::LineStringPtr;
+using kmldom::MultiGeometryPtr;
+using kmldom::PointPtr;
+using kmldom::PolygonPtr;
+using kmldom::SchemaDataPtr;
+using kmldom::SchemaPtr;
+using kmldom::SimpleDataPtr;
+using kmldom::SnippetPtr;
+using kmldom::TimePrimitivePtr;
+using kmldom::TimeSpanPtr;
+using kmldom::TimeStampPtr;
 
 #include "ogr_libkml.h"
 
@@ -1517,7 +1513,7 @@ void kml2field (
                 const DataPtr& data = poKmlExtendedData->get_data_array_at(i);
                 if (data->has_name() && data->has_value())
                 {
-                    CPLString osName = data->get_name();
+                    CPLString osName = std::string(data->get_name());
                     if (bLaunderFieldNames)
                         osName = OGRLIBKMLLayer::LaunderFieldNames(osName);
                     iField = poOgrFeat->GetFieldIndex ( osName );
@@ -1713,9 +1709,9 @@ void get_fieldconfig( struct fieldconfig *oFC) {
     oFC->tsfield = CPLGetConfigOption ( "LIBKML_TIMESTAMP_FIELD",
                                                 "timestamp" );
     oFC->beginfield = CPLGetConfigOption ( "LIBKML_BEGIN_FIELD",
-	                                               "begin" );
-	oFC->endfield = CPLGetConfigOption ( "LIBKML_END_FIELD",
-	                                             "end" );
+                                           "begin" );
+    oFC->endfield = CPLGetConfigOption ( "LIBKML_END_FIELD",
+                                         "end" );
     oFC->altitudeModefield = CPLGetConfigOption ( "LIBKML_ALTITUDEMODE_FIELD",
                                                           "altitudeMode" );
     oFC->tessellatefield = CPLGetConfigOption ( "LIBKML_TESSELLATE_FIELD",

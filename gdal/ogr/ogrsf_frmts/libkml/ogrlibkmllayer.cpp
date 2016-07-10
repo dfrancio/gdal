@@ -29,36 +29,38 @@
 
 #include "libkml_headers.h"
 
+#include <string>
+
 #include "ogr_libkml.h"
 //#include "cpl_conv.h"
 //#include "cpl_string.h"
 #include "cpl_error.h"
 
-using kmldom::KmlFactory;
-using kmldom::PlacemarkPtr;
-using kmldom::Placemark;
-using kmldom::DocumentPtr;
+using kmldom::CameraPtr;
+using kmldom::ChangePtr;
+using kmldom::CreatePtr;
 using kmldom::ContainerPtr;
+using kmldom::DataPtr;
+using kmldom::DeletePtr;
+using kmldom::DocumentPtr;
+using kmldom::ExtendedDataPtr;
 using kmldom::FeaturePtr;
 using kmldom::GroundOverlayPtr;
-using kmldom::KmlPtr;
+using kmldom::IconPtr;
 using kmldom::Kml;
-using kmlengine::KmzFile;
-using kmlengine::KmlFile;
-using kmlengine::Bbox;
-using kmldom::ExtendedDataPtr;
-using kmldom::SchemaDataPtr;
-using kmldom::DataPtr;
-using kmldom::CameraPtr;
-using kmldom::LookAtPtr;
-using kmldom::RegionPtr;
+using kmldom::KmlFactory;
+using kmldom::KmlPtr;
 using kmldom::LatLonAltBoxPtr;
 using kmldom::LodPtr;
+using kmldom::LookAtPtr;
+using kmldom::Placemark;
+using kmldom::PlacemarkPtr;
+using kmldom::RegionPtr;
+using kmldom::SchemaDataPtr;
 using kmldom::ScreenOverlayPtr;
-using kmldom::IconPtr;
-using kmldom::CreatePtr;
-using kmldom::ChangePtr;
-using kmldom::DeletePtr;
+using kmlengine::Bbox;
+using kmlengine::KmlFile;
+using kmlengine::KmzFile;
 
 #include "ogrlibkmlfeature.h"
 #include "ogrlibkmlfield.h"
@@ -354,7 +356,7 @@ OGRLIBKMLLayer::OGRLIBKMLLayer ( const char *pszLayerName,
                         const DataPtr& data = poKmlExtendedData->get_data_array_at(i);
                         if (data->has_name())
                         {
-                            CPLString osName = data->get_name();
+                            CPLString osName = std::string(data->get_name());
                             if (bLaunderFieldNames)
                                 osName = LaunderFieldNames(osName);
                             OGRFieldDefn oOgrField ( osName,
