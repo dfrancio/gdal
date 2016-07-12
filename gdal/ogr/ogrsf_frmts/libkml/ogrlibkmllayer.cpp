@@ -32,9 +32,10 @@
 #include <string>
 
 #include "ogr_libkml.h"
-//#include "cpl_conv.h"
-//#include "cpl_string.h"
 #include "cpl_error.h"
+#include "ogrlibkmlfeature.h"
+#include "ogrlibkmlfield.h"
+#include "ogrlibkmlstyle.h"
 
 using kmldom::CameraPtr;
 using kmldom::ChangePtr;
@@ -43,6 +44,7 @@ using kmldom::ContainerPtr;
 using kmldom::DataPtr;
 using kmldom::DeletePtr;
 using kmldom::DocumentPtr;
+using kmldom::ElementPtr;
 using kmldom::ExtendedDataPtr;
 using kmldom::FeaturePtr;
 using kmldom::GroundOverlayPtr;
@@ -58,13 +60,11 @@ using kmldom::PlacemarkPtr;
 using kmldom::RegionPtr;
 using kmldom::SchemaDataPtr;
 using kmldom::ScreenOverlayPtr;
+using kmldom::SimpleFieldPtr;
+using kmldom::UpdatePtr;
 using kmlengine::Bbox;
 using kmlengine::KmlFile;
 using kmlengine::KmzFile;
-
-#include "ogrlibkmlfeature.h"
-#include "ogrlibkmlfield.h"
-#include "ogrlibkmlstyle.h"
 
 /************************************************************************/
 /*                    OGRLIBKMLGetSanitizedNCName()                     */

@@ -3649,11 +3649,7 @@ elif test "$with_qhull" = "yes" -o "$with_qhull" = "" ; then
     AC_CHECK_LIB(qhull,qh_new_qhull,QHULL_SETTING=yes,QHULL_SETTING=no,)
     if test "$QHULL_SETTING" = "yes"; then
         QHULL_SETTING=external
-        if test -f ${prefix}/include/qhull/libqhull.h; then
-            EXTRA_INCLUDES="-I${prefix}/include/qhull $EXTRA_INCLUDES"
-        else
-            EXTRA_INCLUDES="-I${prefix}/include/qhull $EXTRA_INCLUDES"
-        fi
+        QHULL_INCLUDE_SUBDIR_IS_LIBQHULL=0
         LIBS="-lqhull $LIBS"
     fi
   fi
@@ -3662,11 +3658,7 @@ elif test "$with_qhull" = "yes" -o "$with_qhull" = "" ; then
     AC_CHECK_LIB(qhull,qh_new_qhull,QHULL_SETTING=yes,QHULL_SETTING=no,)
     if test "$QHULL_SETTING" = "yes"; then
         QHULL_SETTING=external
-        if test -f ${prefix}/include/libqhull/libqhull.h; then
-            EXTRA_INCLUDES="-I${prefix}/include/libqhull $EXTRA_INCLUDES"
-        else
-            EXTRA_INCLUDES="-I${prefix}/include/libqhull $EXTRA_INCLUDES"
-        fi
+        QHULL_INCLUDE_SUBDIR_IS_LIBQHULL=1
         LIBS="-lqhull $LIBS"
     fi
   fi
@@ -3676,13 +3668,16 @@ elif test "$with_qhull" = "yes" -o "$with_qhull" = "" ; then
         AC_MSG_ERROR([--with-qhull requested, but library not found!])
     else
         QHULL_SETTING=internal
+        QHULL_INCLUDE_SUBDIR_IS_LIBQHULL=1
     fi
   fi
 else
   QHULL_SETTING=internal
+  QHULL_INCLUDE_SUBDIR_IS_LIBQHULL=1
 fi
 
 AC_SUBST([QHULL_SETTING],$QHULL_SETTING)
+AC_SUBST([QHULL_INCLUDE_SUBDIR_IS_LIBQHULL],$QHULL_INCLUDE_SUBDIR_IS_LIBQHULL)
 
 dnl ---------------------------------------------------------------------------
 dnl Check if opencl library is available.
