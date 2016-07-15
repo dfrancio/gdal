@@ -4344,6 +4344,9 @@ void GTiffRasterBand::SetDescription( const char *pszDescription )
     if( pszDescription == NULL )
         pszDescription = "";
 
+    if( osDescription != pszDescription )
+        poGDS->bMetadataChanged = true;
+
     osDescription = pszDescription;
 }
 
@@ -10438,6 +10441,7 @@ void GTiffDataset::PushMetadataToPam()
                 GDALPamRasterBand::SetDescription( poBand->GetDescription() );
         }
     }
+    MarkPamDirty();
 }
 
 /************************************************************************/
@@ -13289,6 +13293,8 @@ void GTiffDataset::LoadGeoreferencingAndPamIfNeeded()
                 if( pszUnitType )
                     poBand->osUnitType = pszUnitType;
             }
+            if( poBand->osDescription.size() == 0 )
+                poBand->osDescription = poBand->GDALPamRasterBand::GetDescription();
 
             GDALColorInterp ePAMColorInterp =
                 poBand->GDALPamRasterBand::GetColorInterpretation();
@@ -14642,6 +14648,9 @@ GDALDataset *GTiffDataset::Create( const char * pszFilename,
     poDS->nSamplesPerPixel = (uint16) nBands;
     poDS->osFilename = pszFilename;
 
+    // Don't try to load external metadata files (#6597)
+    poDS->bIMDRPCMetadataLoaded = true;
+
     // Avoid premature crystalization that will cause directory re-writing if
     // GetProjectionRef() or GetGeoTransform() are called on the newly created
     // GeoTIFF.
@@ -15703,6 +15712,9 @@ GTiffDataset::CreateCopy( const char * pszFilename, GDALDataset *poSrcDS,
     poDS->bForceUnsetProjection = false;
     poDS->bStreamingOut = bStreaming;
 
+    // Don't try to load external metadata files (#6597)
+    poDS->bIMDRPCMetadataLoaded = true;
+
     // We must re-set the compression level at this point, since it has been
     // lost a few lines above when closing the newly create TIFF file The
     // TIFFTAG_ZIPQUALITY & TIFFTAG_JPEGQUALITY are not store in the TIFF file.
@@ -16282,8 +16294,18 @@ char **GTiffDataset::GetMetadataDomainList()
 {
     LoadGeoreferencingAndPamIfNeeded();
 
+    char ** papszDomainList = CSLDuplicate(oGTiffMDMD.GetDomainList());
+    char ** papszBaseList = GDALDataset::GetMetadataDomainList();
+
+    const int nbBaseDomains = CSLCount(papszBaseList);
+
+    for(int domainId = 0; domainId<nbBaseDomains;++domainId)
+        papszDomainList = CSLAddString(papszDomainList,papszBaseList[domainId]);
+
+    CSLDestroy(papszBaseList);
+
     return BuildMetadataDomainList(
-        CSLDuplicate(oGTiffMDMD.GetDomainList()),
+        papszDomainList,
         TRUE,
         "", "ProxyOverviewRequest", MD_DOMAIN_RPC, MD_DOMAIN_IMD,
         "SUBDATASETS", "EXIF",
@@ -16304,6 +16326,11 @@ char **GTiffDataset::GetMetadata( const char * pszDomain )
 
     if( pszDomain != NULL && EQUAL(pszDomain,"ProxyOverviewRequest") )
         return GDALPamDataset::GetMetadata( pszDomain );
+
+    if( pszDomain != NULL && EQUAL(pszDomain,"DERIVED_SUBDATASETS"))
+      {
+      return GDALDataset::GetMetadata(pszDomain);
+      }
 
     else if( pszDomain != NULL && (EQUAL(pszDomain, MD_DOMAIN_RPC) ||
                                    EQUAL(pszDomain, MD_DOMAIN_IMD) ||

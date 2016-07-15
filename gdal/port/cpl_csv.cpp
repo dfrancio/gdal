@@ -1037,7 +1037,7 @@ char **CSVScanFile( const char * pszFilename, int iKeyField,
 /* -------------------------------------------------------------------- */
     if( iKeyField >= 0
         && iKeyField < CSLCount(psTable->papszRecFields)
-        && CSVCompare(pszValue,psTable->papszRecFields[iKeyField],eCriteria)
+        && CSVCompare(pszValue, psTable->papszRecFields[iKeyField], eCriteria)
         && !psTable->bNonUniqueKey )
     {
         return psTable->papszRecFields;
@@ -1088,7 +1088,7 @@ int CSVGetFieldId( FILE * fp, const char * pszFieldName )
     char **papszFields = CSVReadParseLine( fp );
     for( int i = 0; papszFields != NULL && papszFields[i] != NULL; i++ )
     {
-        if( EQUAL(papszFields[i],pszFieldName) )
+        if( EQUAL(papszFields[i], pszFieldName) )
         {
             CSLDestroy( papszFields );
             return i;
@@ -1121,7 +1121,7 @@ int CSVGetFieldIdL( VSILFILE * fp, const char * pszFieldName )
     char **papszFields = CSVReadParseLineL( fp );
     for( int i = 0; papszFields != NULL && papszFields[i] != NULL; i++ )
     {
-        if( EQUAL(papszFields[i],pszFieldName) )
+        if( EQUAL(papszFields[i], pszFieldName) )
         {
             CSLDestroy( papszFields );
             return i;
@@ -1160,7 +1160,7 @@ int CSVGetFileFieldId( const char * pszFilename, const char * pszFieldName )
              && psTable->papszFieldNames[i] != NULL;
          i++ )
     {
-        if( EQUAL(psTable->papszFieldNames[i],pszFieldName) )
+        if( EQUAL(psTable->papszFieldNames[i], pszFieldName) )
         {
             return i;
         }
@@ -1228,7 +1228,7 @@ const char *CSVGetField( const char * pszFilename,
     if( iTargetField < 0 )
         return "";
 
-    for(int i=0; papszRecord[i] != NULL; ++i)
+    for( int i=0; papszRecord[i] != NULL; ++i )
     {
         if( i == iTargetField )
             return papszRecord[iTargetField];
@@ -1303,17 +1303,27 @@ const char * GDALDefaultCSVFilename( const char *pszBasename )
     {
         pTLSData->bCSVFinderInitialized = TRUE;
 
-        if( CPLGetConfigOption("GEOTIFF_CSV",NULL) != NULL )
-            CPLPushFinderLocation( CPLGetConfigOption("GEOTIFF_CSV",NULL));
+        if( CPLGetConfigOption("GEOTIFF_CSV", NULL) != NULL )
+            CPLPushFinderLocation( CPLGetConfigOption("GEOTIFF_CSV", NULL));
 
-        if( CPLGetConfigOption("GDAL_DATA",NULL) != NULL )
-            CPLPushFinderLocation( CPLGetConfigOption("GDAL_DATA",NULL) );
+        if( CPLGetConfigOption("GDAL_DATA", NULL) != NULL )
+            CPLPushFinderLocation( CPLGetConfigOption("GDAL_DATA", NULL) );
 
         pszResult = CPLFindFile( "epsg_csv", pszBasename );
 
         if( pszResult != NULL )
             return pszResult;
     }
+
+#ifdef GDAL_NO_HARDCODED_FIND
+    // For systems like sandboxes that do not allow other checks.
+    CPLDebug( "CPL_CSV",
+              "Failed to find file in GDALDefaultCSVFilename.  "
+              "Returning original basename: %s",
+              pszBasename );
+    strcpy( pTLSData->szPath, pszBasename );
+    return pTLSData->szPath;
+#else
 
 #ifdef GDAL_PREFIX
   #ifdef MACOSX_FRAMEWORK
@@ -1326,7 +1336,7 @@ const char * GDALDefaultCSVFilename( const char *pszBasename )
 #else
     strcpy( pTLSData->szPath, "/usr/local/share/epsg_csv/" );
     CPLStrlcat( pTLSData->szPath, pszBasename, sizeof(pTLSData->szPath) );
-#endif
+#endif  // GDAL_PREFIX
 
     VSILFILE *fp = VSIFOpenL( pTLSData->szPath, "rt" );
     if( fp == NULL )
@@ -1336,6 +1346,7 @@ const char * GDALDefaultCSVFilename( const char *pszBasename )
         VSIFCloseL( fp );
 
     return pTLSData->szPath;
+#endif  // GDAL_NO_HARDCODED_FIND
 }
 
 /************************************************************************/
