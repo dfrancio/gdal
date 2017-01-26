@@ -1633,8 +1633,8 @@ static bool GDALColorReliefGetRGBA( ColorAssociation* pasColorAssociation,
         return TRUE;
     }
     else if (eColorSelectionMode == COLOR_SELECTION_INTERVAL_ENTRY)
-        *pnR = pasColorAssociation[i].nR;
     {
+        *pnR = pasColorAssociation[i].nR;
         *pnG = pasColorAssociation[i].nG;
         *pnB = pasColorAssociation[i].nB;
         *pnA = pasColorAssociation[i].nA;
