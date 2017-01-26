@@ -1605,7 +1605,7 @@ static bool GDALColorReliefGetRGBA( ColorAssociation* pasColorAssociation,
         }
     }
     else if (pasColorAssociation[i - 1].dfVal == dfVal)
-      {
+    {
         *pnR = pasColorAssociation[i - 1].nR;
         *pnG = pasColorAssociation[i - 1].nG;
         *pnB = pasColorAssociation[i - 1].nB;

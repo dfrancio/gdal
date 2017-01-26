@@ -1,23 +1,16 @@
-/* port/cpl_config.h.in.  Generated from configure.in by autoheader.  */
-/* $Id$ */
+/* port/cpl_config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
 
 /* Define if you want to use pthreads based multiprocessing support */
 #undef CPL_MULTIPROC_PTHREAD
 
-/* Define to 1 if you have the `PTHREAD_MUTEX_RECURSIVE' constant. */
-#undef HAVE_PTHREAD_MUTEX_RECURSIVE
-
-/* Define to 1 if you have the `PTHREAD_MUTEX_ADAPTIVE_NP' constant. */
-#undef HAVE_PTHREAD_MUTEX_ADAPTIVE_NP
-
-/* Define to 1 if you have the `pthread_spinlock_t' type. */
-#undef HAVE_PTHREAD_SPINLOCK
+/* --prefix directory for GDAL install */
+#undef GDAL_PREFIX
 
 /* Define to 1 if you have the 5 args `mremap' function. */
 #undef HAVE_5ARGS_MREMAP
-
-/* --prefix directory for GDAL install */
-#undef GDAL_PREFIX
 
 /* Define to 1 if you have the <assert.h> header file. */
 #undef HAVE_ASSERT_H
@@ -25,8 +18,14 @@
 /* Define to 1 if you have the `atoll' function. */
 #undef HAVE_ATOLL
 
+/* Define to 1 if you have the <CL/opencl.h> header file. */
+#undef HAVE_CL_OPENCL_H
+
 /* Define to 1 if you have the <csf.h> header file. */
 #undef HAVE_CSF_H
+
+/* define if the compiler supports basic C++11 syntax */
+#undef HAVE_CXX11
 
 /* Define to 1 if you have the <dbmalloc.h> header file. */
 #undef HAVE_DBMALLOC_H
@@ -44,6 +43,9 @@
 /* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
 #undef HAVE_DOPRNT
 
+/* Define to 1 if you have the <ecs.h> header file. */
+#undef HAVE_ECS_H
+
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
 
@@ -53,8 +55,26 @@
 /* Define to 1 if you have the <float.h> header file. */
 #undef HAVE_FLOAT_H
 
+/* Define to 1 if you have the <freexl.h> header file. */
+#undef HAVE_FREEXL_H
+
+/* Define to 1 if GCC atomic builtins are available */
+#undef HAVE_GCC_ATOMIC_BUILTINS
+
+/* Define to 1 if GCC bswap builtins are available */
+#undef HAVE_GCC_BSWAP
+
+/* Define to 1 if you have the <geotiff.h> header file. */
+#undef HAVE_GEOTIFF_H
+
+/* Define to 1 if you have the `getaddrinfo' function. */
+#undef HAVE_GETADDRINFO
+
 /* Define to 1 if you have the `getcwd' function. */
 #undef HAVE_GETCWD
+
+/* Define to 1 if you have the <gif_lib.h> header file. */
+#undef HAVE_GIF_LIB_H
 
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
@@ -72,9 +92,6 @@
 /* Define to 1 if the system has the type `int8'. */
 #undef HAVE_INT8
 
-/* Define to 1 if the system has the type `__uint128_t'. */
-#undef HAVE_UINT128_T
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
@@ -87,8 +104,8 @@
 /* Define to 1 if you have the `m' library (-lm). */
 #undef HAVE_LIBM
 
-/* Define to 1 if you have the `pq' library (-lpq). */
-#undef HAVE_LIBPQ
+/* Define to 1 if you have the <libqhull/libqhull.h> header file. */
+#undef HAVE_LIBQHULL_LIBQHULL_H
 
 /* Define to 1 if you have the `rt' library (-lrt). */
 #undef HAVE_LIBRT
@@ -102,17 +119,68 @@
 /* Define to 1, if your compiler supports long long data type */
 #undef HAVE_LONG_LONG
 
-/* Define to 1, if your compiler supports uintptr_t data type */
-#undef HAVE_UINTPTR_T
+/* Define to 1 if you have the `lstat' function. */
+#undef HAVE_LSTAT
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
+/* Define to 1 if you have the `mmap' function. */
+#undef HAVE_MMAP
+
+/* Define to 1 if you have the <openjpeg-2.0/openjpeg.h> header file. */
+#undef HAVE_OPENJPEG_2_0_OPENJPEG_H
+
+/* Define to 1 if you have the <openjpeg-2.1/openjpeg.h> header file. */
+#undef HAVE_OPENJPEG_2_1_OPENJPEG_H
+
+/* Define to 1 if you have the <pcre.h> header file. */
+#undef HAVE_PCRE_H
+
 /* Define to 1 if you have the <png.h> header file. */
 #undef HAVE_PNG_H
 
+/* Define to 1 if you have the `posix_memalign' function. */
+#undef HAVE_POSIX_MEMALIGN
+
+/* Define to 1 if you have the `posix_spawnp' function. */
+#undef HAVE_POSIX_SPAWNP
+
+/* Define to 1 if you have the `PTHREAD_MUTEX_ADAPTIVE_NP' constant. */
+#undef HAVE_PTHREAD_MUTEX_ADAPTIVE_NP
+
+/* Define to 1 if you have the `PTHREAD_MUTEX_RECURSIVE' constant. */
+#undef HAVE_PTHREAD_MUTEX_RECURSIVE
+
+/* Define to 1 if you have the `pthread_spinlock_t' type. */
+#undef HAVE_PTHREAD_SPINLOCK
+
+/* Define to 1 if you have the <qhull/libqhull.h> header file. */
+#undef HAVE_QHULL_LIBQHULL_H
+
+/* Define to 1 if you have the <rasterlite2/rasterlite2.h> header file. */
+#undef HAVE_RASTERLITE2_RASTERLITE2_H
+
+/* Define to 1 if you have the `readlink' function. */
+#undef HAVE_READLINK
+
+/* Define to 1 if you have the _SC_PHYS_PAGES' constant. */
+#undef HAVE_SC_PHYS_PAGES
+
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
+
+/* Define to 1 if you have the <sqlite3.h> header file. */
+#undef HAVE_SQLITE3_H
+
+/* Define to 1 if you have the <sql.h> header file. */
+#undef HAVE_SQL_H
+
+/* Define to 1 if you have the `statvfs' function. */
+#undef HAVE_STATVFS
+
+/* Define to 1 if you have the `statvfs64' function. */
+#undef HAVE_STATVFS64
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -135,11 +203,23 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
+/* Define to 1 if the system has the type __uint128_t */
+#undef HAVE_UINT128_T
+
+/* Define to 1 if the system has the type `uintptr_t'. */
+#undef HAVE_UINTPTR_T
+
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
+/* Define to 1 if you have the `uselocale' function. */
+#undef HAVE_USELOCALE
+
 /* Define to 1 if you have the <values.h> header file. */
 #undef HAVE_VALUES_H
+
+/* Define to 1 if you have the `vfork' function. */
+#undef HAVE_VFORK
 
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF
@@ -147,54 +227,45 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
-/* Define to 1 if you have the `readlink' function. */
-#undef HAVE_READLINK
-
-/* Define to 1 if you have the `posix_spawnp' function. */
-#undef HAVE_POSIX_SPAWNP
-
-/* Define to 1 if you have the `posix_memalign' function. */
-#undef HAVE_POSIX_MEMALIGN
-
-/* Define to 1 if you have the `vfork' function. */
-#undef HAVE_VFORK
-
-/* Define to 1 if you have the `mmap' function. */
-#undef HAVE_MMAP
-
-/* Define to 1 if you have the statvfs' function. */
-#undef HAVE_STATVFS
-
-/* Define to 1 if you have the `statvfs64' function. */
-#undef HAVE_STATVFS64
-
-/* Define to 1 if you have the `lstat' function. */
-#undef HAVE_LSTAT
-
 /* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
 #undef HOST_FILLORDER
 
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
 
-/* For .cpp files, define as const if the declaration of iconv() needs const. */
+/* For.cpp files, define as const if the declaration of iconv() needs const.
+   */
 #undef ICONV_CPP_CONST
 
 /* Define to 1 if libjvm.so should be dlopen'd */
 #undef JVM_LIB_DLOPEN
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
 
 /* Define for Mac OSX Framework build */
 #undef MACOSX_FRAMEWORK
 
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
 /* The size of `int', as computed by sizeof. */
 #undef SIZEOF_INT
-
-/* The size of `long', as computed by sizeof. */
-#undef SIZEOF_LONG
 
 /* The size of `unsigned long', as computed by sizeof. */
 #undef SIZEOF_UNSIGNED_LONG
@@ -211,23 +282,17 @@
 /* Define to 1 if you want to use the -fvisibility GCC flag */
 #undef USE_GCC_VISIBILITY_FLAG
 
-/* Define to 1 if GCC atomic builtins are available */
-#undef HAVE_GCC_ATOMIC_BUILTINS
-
-/* Define to 1 if GCC bswap builtins are available */
-#undef HAVE_GCC_BSWAP
-
 /* Define to name of 64bit fopen function */
 #undef VSI_FOPEN64
-
-/* Define to name of 64bit ftruncate function */
-#undef VSI_FTRUNCATE64
 
 /* Define to name of 64bit fseek func */
 #undef VSI_FSEEK64
 
 /* Define to name of 64bit ftell func */
 #undef VSI_FTELL64
+
+/* Define to name of 64bit ftruncate function */
+#undef VSI_FTRUNCATE64
 
 /* Define to 1, if you have 64 bit STDIO API */
 #undef VSI_LARGE_API_SUPPORTED
@@ -241,20 +306,16 @@
 /* Define to name of 64bit stat structure */
 #undef VSI_STAT64_T
 
-/* Define to 1 if your processor stores words with the most significant byte
-   first (like Motorola and SPARC, unlike Intel and VAX). */
-#undef WORDS_BIGENDIAN
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
 
-/* Define to 1 if you have the `getaddrinfo' function. */
-#undef HAVE_GETADDRINFO
-
-/* Define to 1 if you have the _SC_PHYS_PAGES' constant. */
-#undef HAVE_SC_PHYS_PAGES
-
-/* Use this file to override settings in instances where you're doing FAT compiles
-   on Apple.  It is currently off by default because it doesn't seem to work with
-   XCode >= 3/28/11 */
-/* #include "cpl_config_extras.h" */
-
-/* Define to 1 if you have the `uselocale' function. */
-#undef HAVE_USELOCALE
+#include "cpl_config_extras.h"

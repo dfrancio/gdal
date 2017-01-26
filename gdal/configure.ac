@@ -47,45 +47,115 @@ AC_CANONICAL_HOST
 dnl Enable as much warnings as possible
 AX_CFLAGS_WARN_ALL(C_WFLAGS)
 AX_CXXFLAGS_WARN_ALL(CXX_WFLAGS)
-AX_CHECK_COMPILE_FLAG([-Werror -Wextra],[C_WFLAGS="$C_WFLAGS -Wextra" CXX_WFLAGS="$CXX_WFLAGS -Wextra"])
-AX_CHECK_COMPILE_FLAG([-Werror -Winit-self],[C_WFLAGS="$C_WFLAGS -Winit-self" CXX_WFLAGS="$CXX_WFLAGS -Winit-self"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wunused-parameter], [C_WFLAGS="$C_WFLAGS -Wunused-parameter" CXX_WFLAGS="$CXX_WFLAGS -Wunused-parameter" NO_UNUSED_PARAMETER_FLAG="-Wno-unused-parameter"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wmissing-prototypes], [C_WFLAGS="$C_WFLAGS -Wmissing-prototypes"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wmissing-declarations], [C_WFLAGS="$C_WFLAGS -Wmissing-declarations"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wformat], [C_WFLAGS="$C_WFLAGS -Wformat" CXX_WFLAGS="$CXX_WFLAGS -Wformat"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wformat -Werror=format-security -Wno-format-nonliteral], [C_WFLAGS="$C_WFLAGS -Werror=format-security -Wno-format-nonliteral" CXX_WFLAGS="$CXX_WFLAGS -Werror=format-security -Wno-format-nonliteral"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wshorten-64-to-32], [C_WFLAGS="$C_WFLAGS -Wshorten-64-to-32" CXX_WFLAGS="$CXX_WFLAGS -Wshorten-64-to-32"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wlogical-op], [C_WFLAGS="$C_WFLAGS -Wlogical-op" CXX_WFLAGS="$CXX_WFLAGS -Wlogical-op" NO_LOGICAL_OP_FLAG="-Wno-logical-op"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wshadow], [C_WFLAGS="$C_WFLAGS -Wshadow" CXX_WFLAGS="$CXX_WFLAGS -Wshadow"])
+
+dnl For ICC: it needs -we10006 instead of -Werror to turn unknown options to errors
+dnl Some gcc/clang versions might succeed on this test, so also include -Werror in ERROR_ON_UNKNOWN_OPTIONS
+AX_CHECK_COMPILE_FLAG([-Werror -we10006],[ERROR_ON_UNKNOWN_OPTIONS="-Werror -we10006"],[ERROR_ON_UNKNOWN_OPTIONS="-Werror"])
+
+dnl A few ICC warnings to turn off
+dnl warning #188: enumerated type mixed with another type  (needed on libcsf)
+dnl warning #1684: conversion from pointer to same-sized integral type (potential portability problem)  (needed on frmts/mrf)
+dnl warning #2259: non-pointer conversion from "size_t={unsigned long}" to "int" may lose significant bits
+dnl warning #2304: non-explicit constructor with single argument may cause implicit type conversion
+dnl warning #3280: declaration hides member
+dnl remark #11074: Inlining inhibited by limit max-size
+dnl remark #11076: To get full report use -qopt-report=4 -qopt-report-phase ipo
+AX_CHECK_COMPILE_FLAG([-diag-disable 188,1684,2259,2304,3280,11074,11076],[C_WFLAGS="$C_WFLAGS -diag-disable 188,1684,2259,2304,3280,11074,11076" CXX_WFLAGS="$CXX_WFLAGS -diag-disable 188,1684,2259,2304,3280,11074,11076"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+
+AX_CHECK_COMPILE_FLAG([-Wextra],[C_WFLAGS="$C_WFLAGS -Wextra" CXX_WFLAGS="$CXX_WFLAGS -Wextra"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Winit-self],[C_WFLAGS="$C_WFLAGS -Winit-self" CXX_WFLAGS="$CXX_WFLAGS -Winit-self"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wunused-parameter], [C_WFLAGS="$C_WFLAGS -Wunused-parameter" CXX_WFLAGS="$CXX_WFLAGS -Wunused-parameter" NO_UNUSED_PARAMETER_FLAG="-Wno-unused-parameter"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wmissing-prototypes], [C_WFLAGS="$C_WFLAGS -Wmissing-prototypes"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wmissing-declarations], [C_WFLAGS="$C_WFLAGS -Wmissing-declarations"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wformat], [C_WFLAGS="$C_WFLAGS -Wformat" CXX_WFLAGS="$CXX_WFLAGS -Wformat"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wformat -Werror=format-security -Wno-format-nonliteral], [C_WFLAGS="$C_WFLAGS -Werror=format-security -Wno-format-nonliteral" CXX_WFLAGS="$CXX_WFLAGS -Werror=format-security -Wno-format-nonliteral"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wshorten-64-to-32], [C_WFLAGS="$C_WFLAGS -Wshorten-64-to-32" CXX_WFLAGS="$CXX_WFLAGS -Wshorten-64-to-32"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wlogical-op], [C_WFLAGS="$C_WFLAGS -Wlogical-op" CXX_WFLAGS="$CXX_WFLAGS -Wlogical-op" NO_LOGICAL_OP_FLAG="-Wno-logical-op"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wshadow], [C_WFLAGS="$C_WFLAGS -Wshadow" CXX_WFLAGS="$CXX_WFLAGS -Wshadow"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 dnl Error out on things that will fail with MSVC
-AX_CHECK_COMPILE_FLAG([-Werror -Werror=vla], [C_WFLAGS="$C_WFLAGS -Werror=vla" CXX_WFLAGS="$CXX_WFLAGS -Werror=vla"])
-AX_CHECK_COMPILE_FLAG([-Werror -Werror=declaration-after-statement], [C_WFLAGS="$C_WFLAGS -Wdeclaration-after-statement"])
+AX_CHECK_COMPILE_FLAG([-Werror=vla], [C_WFLAGS="$C_WFLAGS -Werror=vla" CXX_WFLAGS="$CXX_WFLAGS -Werror=vla"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Werror=declaration-after-statement], [C_WFLAGS="$C_WFLAGS -Wdeclaration-after-statement"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 dnl -Wclobbered is not reliable on most gcc versions
-dnl AX_CHECK_COMPILE_FLAG([-Werror -Wno-clobbered], [C_WFLAGS="$C_WFLAGS -Wno-clobbered" CXX_WFLAGS="$CXX_WFLAGS -Wno-clobbered"])
+dnl AX_CHECK_COMPILE_FLAG([-Wno-clobbered], [C_WFLAGS="$C_WFLAGS -Wno-clobbered" CXX_WFLAGS="$CXX_WFLAGS -Wno-clobbered"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+
+dnl Warn when macros __TIME__, __DATE__ or __TIMESTAMP__ are encountered as they might prevent bit-wise-identical reproducible compilations. 
+AX_CHECK_COMPILE_FLAG([-Wdate-time], [C_WFLAGS="$C_WFLAGS -Wdate-time" CXX_WFLAGS="$CXX_WFLAGS -Wdate-time"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 dnl GCC 6 warnings
-AX_CHECK_COMPILE_FLAG([-Werror -Wnull-dereference], [C_WFLAGS="$C_WFLAGS -Wnull-dereference" CXX_WFLAGS="$CXX_WFLAGS -Wnull-dereference"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wduplicated-cond], [C_WFLAGS="$C_WFLAGS -Wduplicated-cond" CXX_WFLAGS="$CXX_WFLAGS -Wduplicated-cond"])
+AX_CHECK_COMPILE_FLAG([-Wnull-dereference], [C_WFLAGS="$C_WFLAGS -Wnull-dereference" CXX_WFLAGS="$CXX_WFLAGS -Wnull-dereference"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wduplicated-cond], [C_WFLAGS="$C_WFLAGS -Wduplicated-cond" CXX_WFLAGS="$CXX_WFLAGS -Wduplicated-cond"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
-AX_CHECK_COMPILE_FLAG([-Werror -Wno-sign-compare], [NO_SIGN_COMPARE="-Wno-sign-compare"])
+AX_CHECK_COMPILE_FLAG([-Wno-sign-compare], [NO_SIGN_COMPARE="-Wno-sign-compare"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+
+dnl clang >= 3.9
+AX_CHECK_COMPILE_FLAG([-Wcomma], [C_WFLAGS="$C_WFLAGS -Wcomma" CXX_WFLAGS="$CXX_WFLAGS -Wcomma"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+
+dnl clang and gcc 5
+AX_CHECK_COMPILE_FLAG([-Wfloat-conversion], [C_WFLAGS="$C_WFLAGS -Wfloat-conversion" CXX_WFLAGS="$CXX_WFLAGS -Wfloat-conversion"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+
+dnl clang >= 3.2
+AX_CHECK_COMPILE_FLAG([-Wdocumentation -Wno-documentation-deprecated-sync], [C_WFLAGS="$C_WFLAGS -Wdocumentation -Wno-documentation-deprecated-sync" CXX_WFLAGS="$CXX_WFLAGS -Wdocumentation -Wno-documentation-deprecated-sync"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 dnl C++ specific stuff
 
 AC_LANG_PUSH([C++])
-AX_CHECK_COMPILE_FLAG([-Werror -Wunused-private-field], [CXX_WFLAGS="$CXX_WFLAGS -Wunused-private-field"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wmissing-prototypes], [CXX_WFLAGS="$CXX_WFLAGS -Wmissing-prototypes"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wmissing-declarations], [CXX_WFLAGS="$CXX_WFLAGS -Wmissing-declarations"])
-AX_CHECK_COMPILE_FLAG([-Werror -Wnon-virtual-dtor], [CXX_WFLAGS="$CXX_WFLAGS -Wnon-virtual-dtor" NO_NON_VIRTUAL_DTOR_FLAG="-Wno-non-virtual-dtor"])
+AX_CHECK_COMPILE_FLAG([-Wunused-private-field], [CXX_WFLAGS="$CXX_WFLAGS -Wunused-private-field"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wmissing-prototypes], [CXX_WFLAGS="$CXX_WFLAGS -Wmissing-prototypes"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wmissing-declarations], [CXX_WFLAGS="$CXX_WFLAGS -Wmissing-declarations"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+AX_CHECK_COMPILE_FLAG([-Wnon-virtual-dtor], [CXX_WFLAGS="$CXX_WFLAGS -Wnon-virtual-dtor" NO_NON_VIRTUAL_DTOR_FLAG="-Wno-non-virtual-dtor"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 dnl Clang enables -Woverloaded-virtual if -Wall is defined, but not GCC
-AX_CHECK_COMPILE_FLAG([-Werror -Woverloaded-virtual], [CXX_WFLAGS="$CXX_WFLAGS -Woverloaded-virtual"])
+AX_CHECK_COMPILE_FLAG([-Woverloaded-virtual], [CXX_WFLAGS="$CXX_WFLAGS -Woverloaded-virtual"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 dnl Forbid use of 'or', 'and', ... alias operators
-AX_CHECK_COMPILE_FLAG([-Werror -fno-operator-names], [CXX_WFLAGS="$CXX_WFLAGS -fno-operator-names"])
+AX_CHECK_COMPILE_FLAG([-fno-operator-names], [CXX_WFLAGS="$CXX_WFLAGS -fno-operator-names"],,[$ERROR_ON_UNKNOWN_OPTIONS])
 
 AC_LANG_POP([C++])
+
+CXX11_SUPPORT=no
+AC_ARG_WITH([cpp11],
+	    AS_HELP_STRING([--without-cpp11],
+	       [Disable C++11 compiler options]),,)
+
+AC_MSG_CHECKING([if use C++11 compiler options])
+if test "$with_cpp11" = "yes" -o "$with_cpp11" = "" ; then
+    dnl Check C++ compiler compatibility with C++11
+    AC_MSG_CHECKING([C++ compiler compatibility with C++11])
+    AX_CXX_COMPILE_STDCXX_11([ext],[optional])
+
+    if [test "$HAVE_CXX11" = "1"]; then
+        CXX11_SUPPORT=yes
+    fi
+    AC_MSG_RESULT([enabled])
+else
+    AC_MSG_RESULT([disabled by user])
+fi
+AC_SUBST(CXX11_SUPPORT,$CXX11_SUPPORT)
+
+if [test "$CXX11_SUPPORT" = "yes"]; then
+    dnl Available in GCC 5.1
+    AC_LANG_PUSH([C++])
+        AX_CHECK_COMPILE_FLAG([-Wsuggest-override], [CXX_WFLAGS="$CXX_WFLAGS -Wsuggest-override"],,[$ERROR_ON_UNKNOWN_OPTIONS])
+    AC_LANG_POP([C++])
+fi
+
+dnl Enable -Wimplicit-fallthrough only if C++11 is enabled since CPL_FALLTHROUGH is only active then
+AC_LANG_PUSH([C++])
+SAVED_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$CXXFLAGS $ERROR_ON_UNKNOWN_OPTIONS -Wimplicit-fallthrough"
+AC_MSG_CHECKING([if -Wimplicit-fallthrough can be enabled])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+  [[#if !(__cplusplus >= 201103L && ( (defined(__clang__) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >=7))) || ((defined(__GNUC__) && __GNUC__ >= 7)) ) )
+    #error "not (C++11 and (clang >= 3.7 or gcc >= 7))"
+    #endif]])],
+  [CXX_WFLAGS="$CXX_WFLAGS -Wimplicit-fallthrough"]
+  [AC_MSG_RESULT([yes])],
+  [AC_MSG_RESULT([no])])
+CXXFLAGS=$SAVED_CXXFLAGS
+AC_LANG_POP([C++])
+
 
 AC_SUBST(CXX_WFLAGS,$CXX_WFLAGS)
 AC_SUBST(C_WFLAGS,$C_WFLAGS)
@@ -109,7 +179,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
   [CXX=;])
 AC_LANG_POP([C++])
 
-if test "x$CXX" == x ; then
+if test "x$CXX" = x ; then
   AC_MSG_ERROR("You don't have a working C++ compiler.")
 fi
 
@@ -117,7 +187,7 @@ dnl switch between libtool and native build system
 AC_ARG_WITH(libtool, [  --without-libtool     Don't use libtool to build the library],,)
 
 if test "$with_libtool" = "no"; then
-AC_PROG_RANLIB
+LT_INIT
 
 dnl AC_COMPILER_PIC as expanded by autoconf-2.68 doesn't work for the C++ part with clang++ 3.0 that doesn't like compiling .c programs
 dnl so we inline the expanded code and fix it at hand.
@@ -174,6 +244,7 @@ AC_CHECK_TYPES([int8, int16, int32],,,
 # include <inttypes.h>
 #endif
 ])
+AC_CHECK_TYPES(uintptr_t)
 
 dnl We need the following lines for libtiff too.
 HAVE_IEEEFP=1
@@ -210,6 +281,7 @@ AC_CHECK_FUNCS(posix_memalign)
 AC_CHECK_FUNCS(vfork)
 AC_CHECK_FUNCS(mmap)
 AC_CHECK_FUNCS(statvfs)
+AC_CHECK_FUNCS(statvfs64)
 
 dnl Make sure at least these are checked under C++.  Prototypes missing on
 dnl some platforms.
@@ -318,9 +390,51 @@ else
     HAVE_GCC_ATOMIC_BUILTINS=no
     AC_MSG_RESULT([no])
 fi
-rm -f atomicbuiltins.* atomicbuiltins
+rm -rf atomicbuiltins.* atomicbuiltins
 
 AC_SUBST(HAVE_GCC_ATOMIC_BUILTINS,$HAVE_GCC_ATOMIC_BUILTINS)
+
+dnl ---------------------------------------------------------------------------
+dnl Check if GCC bswap builtins are available
+dnl ---------------------------------------------------------------------------
+
+AC_MSG_CHECKING([whether GCC bswap builtins are available])
+
+rm -f bswapbuiltins.c
+echo '#include <x86intrin.h>' > bswapbuiltins.c
+echo 'int main(int argc, char** argv) { (void)__builtin_bswap32(0); (void)__builtin_bswap64(0); return 0; } ' >> bswapbuiltins.c
+if test -z "`${CC} ${CFLAGS} bswapbuiltins.c -o bswapbuiltins 2>&1`" ; then
+    HAVE_GCC_BSWAP=yes
+    AC_MSG_RESULT([yes])
+    AC_DEFINE_UNQUOTED(HAVE_GCC_BSWAP,1, [Define to 1 if GCC bswap builtins are available])
+else
+    HAVE_GCC_BSWAP=no
+    AC_MSG_RESULT([no])
+fi
+rm -rf bswapbuiltins.* bswapbuiltins
+
+AC_SUBST(HAVE_GCC_BSWAP,$HAVE_GCC_BSWAP)
+
+dnl ---------------------------------------------------------------------------
+dnl Check if __uint128_t is available and usable
+dnl ---------------------------------------------------------------------------
+
+AC_MSG_CHECKING([for __uint128_t])
+AC_TRY_COMPILE(
+  [
+  ], [
+      unsigned long long v1 = 1024ULL;
+      unsigned long long v2 = 0x8000000000000000ULL;
+      __uint128_t u = ((__uint128_t)v1)*((__uint128_t)v2);
+      return u == 0;
+  ],
+  [
+    AC_MSG_RESULT([yes])
+    AC_DEFINE_UNQUOTED(HAVE_UINT128_T, 1,
+          [Define to 1 if the system has the type __uint128_t])
+  ], [
+    AC_MSG_RESULT([no])
+])
 
 dnl ---------------------------------------------------------------------------
 dnl Check SSE availability
@@ -381,13 +495,88 @@ if test "$with_sse" = "yes" -o "$with_sse" = ""; then
        esac
     fi
 
-    rm -f detectsse*
+    if test "$HAVE_SSE_AT_COMPILE_TIME" = "yes"; then
+        CFLAGS="-DHAVE_SSE_AT_COMPILE_TIME $CFLAGS"
+        CXXFLAGS="-DHAVE_SSE_AT_COMPILE_TIME $CXXFLAGS"
+    fi
+
+    rm -rf detectsse*
 else
     AC_MSG_RESULT([no])
 fi
 
 AC_SUBST(SSEFLAGS,$SSEFLAGS)
-AC_SUBST(HAVE_SSE_AT_COMPILE_TIME,$HAVE_SSE_AT_COMPILE_TIME)
+
+dnl ---------------------------------------------------------------------------
+dnl Check SSSE3 availability
+dnl ---------------------------------------------------------------------------
+
+AC_ARG_WITH(ssse3,
+[  --with-ssse3[=ARG]        Detect SSSE3 availability for some optimized routines (ARG=yes(default), no)],,)
+
+AC_MSG_CHECKING([whether SSSE3 is available at compile time])
+
+if test "$with_ssse3" = "yes" -o "$with_ssse3" = ""; then
+
+    rm -f detectssse3.cpp
+    echo '#ifdef __SSSE3__' > detectssse3.cpp
+    echo '#include <tmmintrin.h>' >> detectssse3.cpp
+    echo 'void foo() { __m128i xmm_i = _mm_set1_epi16(0); xmm_i = _mm_shuffle_epi8(xmm_i, xmm_i); }  int main() { return 0; }' >> detectssse3.cpp
+    echo '#else' >> detectssse3.cpp
+    echo 'some_error' >> detectssse3.cpp
+    echo '#endif' >> detectssse3.cpp
+    if test -z "`${CXX} ${CXXFLAGS} -o detectssse3 detectssse3.cpp 2>&1`" ; then
+        AC_MSG_RESULT([yes])
+        SSSE3FLAGS=""
+        HAVE_SSSE3_AT_COMPILE_TIME=yes
+    else
+        if test -z "`${CXX} ${CXXFLAGS} -mssse3 -o detectssse3 detectssse3.cpp 2>&1`" ; then
+            AC_MSG_RESULT([yes])
+            SSSE3FLAGS="-mssse3"
+            HAVE_SSSE3_AT_COMPILE_TIME=yes
+        else
+            AC_MSG_RESULT([no])
+            if test "$with_ssse3" = "yes"; then
+                AC_MSG_ERROR([--with-ssse3 was requested, but SSSE3 is not available])
+            fi
+        fi
+    fi
+
+    dnl On Solaris, the presence of SSSE3 instructions is flagged in the binary
+    dnl and prevent it to run on non SSSE3 hardware even if the instructions are
+    dnl not executed. So if the user did not explicitly requires SSSE3, test that
+    dnl we can run SSSE3 binaries
+    if test "$HAVE_SSSE3_AT_COMPILE_TIME" = "yes"; then
+       case $host_os in
+         solaris*)
+           AC_MSG_CHECKING([whether SSSE3 is available and needed at runtime])
+           if ./detectssse3; then
+             AC_MSG_RESULT([yes])
+           else
+             AC_MSG_RESULT([no])
+             if test "$with_ssse3" = "yes"; then
+               echo "Caution: the generated binaries will not run on this system."
+             else
+               echo "Disabling SSSE3 as it is not explicitly required"
+               HAVE_SSSE3_AT_COMPILE_TIME=""
+               SSSE3FLAGS=""
+             fi
+           fi
+           ;;
+       esac
+    fi
+
+    if test "$HAVE_SSSE3_AT_COMPILE_TIME" = "yes"; then
+        CFLAGS="-DHAVE_SSSE3_AT_COMPILE_TIME $CFLAGS"
+        CXXFLAGS="-DHAVE_SSSE3_AT_COMPILE_TIME $CXXFLAGS"
+    fi
+
+    rm -rf detectssse3*
+else
+    AC_MSG_RESULT([no])
+fi
+
+AC_SUBST(SSSE3FLAGS,$SSSE3FLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check AVX availability
@@ -453,13 +642,17 @@ if test "$with_avx" = "yes" -o "$with_avx" = ""; then
        esac
     fi
 
-    rm -f detectavx*
+    if test "$HAVE_AVX_AT_COMPILE_TIME" = "yes"; then
+        CFLAGS="-DHAVE_AVX_AT_COMPILE_TIME $CFLAGS"
+        CXXFLAGS="-DHAVE_AVX_AT_COMPILE_TIME $CXXFLAGS"
+    fi
+
+    rm -rf detectavx*
 else
     AC_MSG_RESULT([no])
 fi
 
 AC_SUBST(AVXFLAGS,$AVXFLAGS)
-AC_SUBST(HAVE_AVX_AT_COMPILE_TIME,$HAVE_AVX_AT_COMPILE_TIME)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for --enable-lto
@@ -471,8 +664,8 @@ AC_ARG_ENABLE(lto,
               AS_HELP_STRING([--enable-lto],
                              [enable LTO(link time optimization) (disabled by default)]))
 
-CFLAGS_NO_LTO_IF_AVX_NONDEFAULT="$CFLAGS"
 CXXFLAGS_NO_LTO_IF_AVX_NONDEFAULT="$CXXFLAGS"
+CXXFLAGS_NO_LTO_IF_SSSE3_NONDEFAULT="$CXXFLAGS"
 
 if test "x$enable_lto" = "xyes" ; then
 
@@ -491,8 +684,12 @@ if test "x$enable_lto" = "xyes" ; then
   dnl with -flto
   if test "$HAVE_AVX_AT_COMPILE_TIME" = "yes"; then
     if test "$AVXFLAGS" = ""; then
-        CFLAGS_NO_LTO_IF_AVX_NONDEFAULT="$CFLAGS"
         CXXFLAGS_NO_LTO_IF_AVX_NONDEFAULT="$CXXFLAGS"
+    fi
+  fi
+  if test "$HAVE_SSSE3_AT_COMPILE_TIME" = "yes"; then
+    if test "$SSSE3FLAGS" = ""; then
+        CXXFLAGS_NO_LTO_IF_SSSE3_NONDEFAULT="$CXXFLAGS"
     fi
   fi
 
@@ -501,11 +698,11 @@ else
   AC_MSG_RESULT([no])
 fi
 
-AC_SUBST(CFLAGS_NO_LTO_IF_AVX_NONDEFAULT,$CFLAGS_NO_LTO_IF_AVX_NONDEFAULT)
 AC_SUBST(CXXFLAGS_NO_LTO_IF_AVX_NONDEFAULT,$CXXFLAGS_NO_LTO_IF_AVX_NONDEFAULT)
+AC_SUBST(CXXFLAGS_NO_LTO_IF_SSSE3_NONDEFAULT,$CXXFLAGS_NO_LTO_IF_SSSE3_NONDEFAULT)
 
 dnl ---------------------------------------------------------------------------
-dnl Check if we need -lws2_32
+dnl Check if we need -lws2_32 (mingw)
 dnl ---------------------------------------------------------------------------
 
 echo "#include <winsock2.h>" > test_ws2_32.c
@@ -516,6 +713,20 @@ if test -z "`${CC} -c test_ws2_32.c 2>&1`" ; then
   LIBS="$LIBS -lws2_32"
 fi
 rm -f test_ws2_32*
+
+dnl ---------------------------------------------------------------------------
+dnl Check if we need -lpsapi (mingw)
+dnl ---------------------------------------------------------------------------
+
+echo "#include <windows.h>" > test_psapi.c
+echo "#include <psapi.h>" >> test_psapi.c
+echo "void foo() {}" >> test_psapi.c
+
+if test -z "`${CC} -c test_psapi.c 2>&1`" ; then
+  LIBS="$LIBS -lpsapi"
+fi
+rm -f test_psapi*
+
 
 dnl ---------------------------------------------------------------------------
 dnl Check if we have getaddrinfo
@@ -593,17 +804,17 @@ AC_SUBST(RENAME_INTERNAL_LIBGEOTIFF_SYMBOLS,$with_rename_internal_libgeotiff_sym
 
 
 dnl ---------------------------------------------------------------------------
-dnl Check if user requests ${prefix} to be included.
+dnl Check if user requests /usr/local to be included.
 dnl ---------------------------------------------------------------------------
 
 AC_MSG_CHECKING([for local include/lib path])
 
-AC_ARG_WITH(local,[  --with-local[=dir]      Include ${prefix} or other local tree for INCLUDE/LIBS],,)
+AC_ARG_WITH(local,[  --with-local[=dir]      Include /usr/local or other local tree for INCLUDE/LIBS],,)
 
 if test "$with_local" != "no" -a "$with_local" != "" ; then
 
   if test "$with_local" = "yes" ; then
-    ADD_PREFIX=${prefix}
+    ADD_PREFIX=/usr/local
   else
     ADD_PREFIX=$with_local
   fi
@@ -885,12 +1096,12 @@ if test "x$PG_CONFIG" = "xno" ; then
 else
   if test -d ${PG_CONFIG} ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-pg argument is a directory.  It should be the path to the pg_config script, often somewhere like ${prefix}/pgsql/bin/pg_config.])
+      AC_MSG_ERROR([--with-pg argument is a directory.  It should be the path to the pg_config script, often somewhere like /usr/local/pgsql/bin/pg_config.])
   fi
 
   if test \! -x ${PG_CONFIG} ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-pg argument is a not an executable file.  It should be the path to the pg_config script, often somewhere like ${prefix}/pgsql/bin/pg_config.])
+      AC_MSG_ERROR([--with-pg argument is a not an executable file.  It should be the path to the pg_config script, often somewhere like /usr/local/pgsql/bin/pg_config.])
   fi
 
   AC_MSG_RESULT([yes])
@@ -900,23 +1111,6 @@ else
   if test "${HAVE_PG}" = "yes" ; then
     LIBS=-L`$PG_CONFIG --libdir`" -lpq $LIBS"
     PG_INC=-I`$PG_CONFIG --includedir`" -I"`$PG_CONFIG --includedir-server`
-
-    PG_EXTRA_DEC=""
-    saved_LIBS="$LIBS"
-    AC_CHECK_LIB(pq,PQputCopyData,,DEFINE_PG_PRE74=-DPG_PRE74,)
-    LIBS="$saved_LIBS"
-    if test "$DEFINE_PG_PRE74" != "" ; then
-      echo "The PostgreSQL client version is before 7.4. You will not be able to use binary cursors."
-    fi
-
-    saved_LIBS="$LIBS"
-    AC_CHECK_LIB(pq,PQescapeStringConn,DEFINE_PG_HAS_PQESCAPESTRINGCONN=-DPG_HAS_PQESCAPESTRINGCONN,,)
-    LIBS="$saved_LIBS"
-    if test "$DEFINE_PG_HAS_PQESCAPESTRINGCONN" = "" ; then
-      echo "falling back to using PQescapeString. You should upgrade at least to security releases 8.1.4, 8.0.8, 7.4.13, 7.3.15."
-    fi
-
-    PG_INC="${PG_INC} ${DEFINE_PG_PRE74} ${DEFINE_PG_HAS_PQESCAPESTRINGCONN}"
   fi
 
 fi
@@ -1026,9 +1220,9 @@ elif test "$with_cfitsio" = "yes" -o "$with_cfitsio" = "" ; then
     echo "libcfitsio not found - FITS support disabled"
   fi
 
-dnl Fedora has cfitsio headers in ${prefix}/include/cfitsio
-  if test "$FITS_SETTING" = "external" -a -d ${prefix}/include/cfitsio ; then
-    EXTRA_INCLUDES="-I${prefix}/include/cfitsio $EXTRA_INCLUDES"
+dnl Fedora has cfitsio headers in /usr/include/cfitsio
+  if test "$FITS_SETTING" = "external" -a -d /usr/include/cfitsio ; then
+    EXTRA_INCLUDES="-I/usr/include/cfitsio $EXTRA_INCLUDES"
   fi
 
 else
@@ -1338,14 +1532,14 @@ if test "$with_geotiff" = "yes" -o "$with_geotiff" = "" ; then
   if test "$GEOTIFF_SETTING" = "external" ; then
 
     dnl Now search for headers
-    if test -r ${prefix}/include/geotiff.h ; then
+    if test -r /usr/include/geotiff.h ; then
       GEOTIFF_INCLUDE=
-    dnl Debian (at least some versions of it) install in ${prefix}/include/geotiff
-    elif test -r ${prefix}/include/geotiff/geotiff.h ; then
-      GEOTIFF_INCLUDE="-I${prefix}/include/geotiff"
-    dnl Fedora and OpenSuse in ${prefix}/include/libgeotiff (#4706)
-    elif test -r ${prefix}/include/libgeotiff/geotiff.h ; then
-      GEOTIFF_INCLUDE="-I${prefix}/include/libgeotiff"
+    dnl Debian (at least some versions of it) install in /usr/include/geotiff
+    elif test -r /usr/include/geotiff/geotiff.h ; then
+      GEOTIFF_INCLUDE="-I/usr/include/geotiff"
+    dnl Fedora and OpenSuse in /usr/include/libgeotiff (#4706)
+    elif test -r /usr/include/libgeotiff/geotiff.h ; then
+      GEOTIFF_INCLUDE="-I/usr/include/libgeotiff"
     else
       AC_CHECK_HEADERS([geotiff.h])
       if test "$ac_cv_header_geotiff_h" = "no" ; then
@@ -1575,14 +1769,14 @@ elif test "$with_ogdi" = "yes" -o "$with_ogdi" = "" ; then
   AC_CHECK_HEADERS(ecs.h)
 
   if test "$ac_cv_header_ecs_h" = "no" ; then
-    if test -f "${prefix}/include/ogdi/ecs.h"; then
-        OGDI_INCLUDE="-I${prefix}/include/ogdi"
-    elif test -f "${prefix}/include/ogdi/ecs.h"; then
-        OGDI_INCLUDE="-I${prefix}/include/ogdi"
-    elif test -f "${prefix}/include/ecs.h"; then
-        OGDI_INCLUDE="-I${prefix}/include"
-    elif test -f "${prefix}/include/ecs.h"; then
-        OGDI_INCLUDE="-I${prefix}/include"
+    if test -f "/usr/include/ogdi/ecs.h"; then
+        OGDI_INCLUDE="-I/usr/include/ogdi"
+    elif test -f "/usr/local/include/ogdi/ecs.h"; then
+        OGDI_INCLUDE="-I/usr/local/include/ogdi"
+    elif test -f "/usr/include/ecs.h"; then
+        OGDI_INCLUDE="-I/usr/include"
+    elif test -f "/usr/local/include/ecs.h"; then
+        OGDI_INCLUDE="-I/usr/local/include"
     fi
   fi
 
@@ -1711,27 +1905,27 @@ elif test "$with_sosi" = "yes" ; then
     rm -f testfyba
     echo "#include <fyba.h>" > testfyba.cpp
     echo "int main() { LC_Init(); return 0; }" >> testfyba.cpp
-    if test  -r ${prefix}/include/fyba -a -z "`${CXX} ${CPPFLAGS} -I${prefix}/include/fyba -DLINUX testfyba.cpp -lfyba -lfygm -lfyut -o testfyba 2>&1`" ; then
+    if test  -r /usr/include/fyba -a -z "`${CXX} ${CPPFLAGS} -I/usr/include/fyba -DLINUX testfyba.cpp -lfyba -lfygm -lfyut -o testfyba 2>&1`" ; then
         AC_MSG_RESULT([found])
         SOSI_ENABLED=yes
         SOSI_LIB="-lfyba -lfygm -lfyut"
-        SOSI_INC="-I${prefix}/include/fyba"
+        SOSI_INC="-I/usr/include/fyba"
     else
         AC_MSG_RESULT([not found])
-        AC_MSG_CHECKING([for libfyba.a, libfygm.a and libfyut.a in ${prefix}/lib])
-        if test -r ${prefix}/lib/libfyba.a -a -r ${prefix}/lib/libfygm.a -a -r ${prefix}/lib/libfyut.a ; then
+        AC_MSG_CHECKING([for libfyba.a, libfygm.a and libfyut.a in /usr/local/lib])
+        if test -r /usr/local/lib/libfyba.a -a -r /usr/local/lib/libfygm.a -a -r /usr/local/lib/libfyut.a ; then
             AC_MSG_RESULT([found])
             SOSI_ENABLED=yes
-            SOSI_LIB="${prefix}/lib/libfyba.a ${prefix}/lib/libfygm.a ${prefix}/lib/libfyut.a"
+            SOSI_LIB="/usr/local/lib/libfyba.a /usr/local/lib/libfygm.a /usr/local/lib/libfyut.a"
         else
             AC_MSG_ERROR([not found.])
         fi
 
-        AC_MSG_CHECKING([for fyba.h, fygm.h and fyut.h in ${prefix}/include/fyba])
-        if test -r ${prefix}/include/fyba/fyba.h -a -r ${prefix}/include/fyba/fygm.h -a -r ${prefix}/include/fyba/fyut.h ; then
+        AC_MSG_CHECKING([for fyba.h, fygm.h and fyut.h in /usr/local/include/fyba])
+        if test -r /usr/local/include/fyba/fyba.h -a -r /usr/local/include/fyba/fygm.h -a -r /usr/local/include/fyba/fyut.h ; then
             AC_MSG_RESULT([found])
             SOSI_ENABLED=yes
-            SOSI_INC="-I${prefix}/include/fyba"
+            SOSI_INC="-I/usr/local/include/fyba"
         else
             AC_MSG_ERROR([not found.])
         fi
@@ -1857,11 +2051,11 @@ if test x"$with_hdf4" = x"no" ; then
 else
 
   if test x"$with_hdf4" = x"yes" -o x"$with_hdf4" = x"" ; then
-dnl Fedora has hdf static libraries in ${prefix}/lib/hdf
-    if test -d ${prefix}/lib64/hdf; then
-      HDF_LIB_DIR="${prefix}/lib64/hdf"
-    elif test -d ${prefix}/lib/hdf; then
-      HDF_LIB_DIR="${prefix}/lib/hdf"
+dnl Fedora has hdf static libraries in /usr/lib/hdf
+    if test -d /usr/lib64/hdf; then
+      HDF_LIB_DIR="/usr/lib64/hdf"
+    elif test -d /usr/lib/hdf; then
+      HDF_LIB_DIR="/usr/lib/hdf"
     else
       HDF_LIB_DIR=""
     fi
@@ -1921,8 +2115,8 @@ dnl Not found... again, with -lsz.
     fi
 
   dnl Now search for headers
-    if test "$with_hdf4" = "yes" -o "$with_hdf4" = "" -a -r ${prefix}/include/hdf/hdf.h ; then
-      HDF4_INCLUDE="-I${prefix}/include/hdf"
+    if test "$with_hdf4" = "yes" -o "$with_hdf4" = "" -a -r /usr/include/hdf/hdf.h ; then
+      HDF4_INCLUDE="-I/usr/include/hdf"
     elif test -r "$with_hdf4/hdf/hdf.h" ; then
       HDF4_INCLUDE="-I$with_hdf4/hdf"
     elif test -r "$with_hdf4/include/hdf/hdf.h" ; then
@@ -1974,15 +2168,36 @@ if test "$with_hdf5" = "no" ; then
 
 elif test "$with_hdf5" = "yes" -o "$with_hdf5" = "" ; then
 
-  AC_CHECK_LIB(hdf5,H5Fopen,HAVE_HDF5=yes,HAVE_HDF5=no,)
+  HDF5_CFLAGS=""
+  HDF5_LIBS=""
+  PKG_PROG_PKG_CONFIG([0.25]) # check and set $PKG_CONFIG
+  PKG_CHECK_MODULES([HDF5], [hdf5], [HAVE_HDF5=yes], [HAVE_HDF5=no])
 
-  if test "$HAVE_HDF5" = "yes" ; then
-    LIBS="-lhdf5 $LIBS"
-  fi
+  if test "$HAVE_HDF5" = "yes"; then
 
-dnl Some Linux distros install hdf include files here.
-  if test "$HAVE_HDF5" = "yes" -a -r ${prefix}/include/hdf5.h ; then
-    HDF5_INCLUDE="-I${prefix}/include"
+    # Test that the package found is for the right architecture
+    saved_LIBS="$LIBS"
+    LIBS="$HDF5_LIBS"
+    AC_CHECK_LIB(hdf5,H5Fopen, [HAVE_HDF5=yes], [HAVE_HDF5=no])
+    LIBS="$saved_LIBS"
+
+    if test "$HAVE_HDF5" = "yes"; then
+        LIBS="$HDF5_LIBS $LIBS"
+        HDF5_INCLUDE="$HDF5_CFLAGS"
+    fi
+
+  else
+
+    AC_CHECK_LIB(hdf5,H5Fopen,HAVE_HDF5=yes,HAVE_HDF5=no,)
+
+    if test "$HAVE_HDF5" = "yes" ; then
+        LIBS="-lhdf5 $LIBS"
+    fi
+
+    dnl Some Linux distros install hdf include files here.
+    if test "$HAVE_HDF5" = "yes" -a -r /usr/include/hdf5.h ; then
+        HDF5_INCLUDE="-I/usr/include"
+    fi
   fi
 
 else
@@ -2051,12 +2266,12 @@ if test "$KEA_CONFIG" = "no" ; then
 else
   if test -d $KEA_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-kea argument is a directory.  It should be the path to the kea_config script, often somewhere like ${prefix}/bin/kea_config.])
+      AC_MSG_ERROR([--with-kea argument is a directory.  It should be the path to the kea_config script, often somewhere like /usr/local/bin/kea_config.])
   fi
 
   if test \! -x $KEA_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-kea argument is a not an executable file.  It should be the path to the kea_config script, often somewhere like ${prefix}/bin/kea_config.])
+      AC_MSG_ERROR([--with-kea argument is a not an executable file.  It should be the path to the kea_config script, often somewhere like /usr/local/bin/kea_config.])
   fi
 
   HAVE_KEA=yes
@@ -2141,20 +2356,20 @@ elif test "$with_netcdf" = "yes" -o "$with_netcdf" = "" ; then
 
   if test "$NETCDF_SETTING" = "yes" ; then
 
-    dnl Fedora has netcdf headers in ${prefix}/include/netcdf
-    if test -d ${prefix}/include/netcdf ; then
-      EXTRA_INCLUDES="-I${prefix}/include/netcdf $EXTRA_INCLUDES"
-      NETCDF_ROOT="${prefix}"
-    dnl RHEL 5 has netcdf headers in ${prefix}/include/netcdf-3
-    elif test -d ${prefix}/include/netcdf-3 ; then
-      EXTRA_INCLUDES="-I${prefix}/include/netcdf-3 $EXTRA_INCLUDES"
-      NETCDF_ROOT="${prefix}"
-    dnl ubuntu and fedora have netcdf headers in ${prefix}/include
-    elif test -f ${prefix}/include/netcdf.h ; then
-      NETCDF_ROOT="${prefix}"
-    dnl try ${prefix}
-    elif test -f ${prefix}/include/netcdf.h ; then
-      NETCDF_ROOT="${prefix}"
+    dnl Fedora has netcdf headers in /usr/include/netcdf
+    if test -d /usr/include/netcdf ; then
+      EXTRA_INCLUDES="-I/usr/include/netcdf $EXTRA_INCLUDES"
+      NETCDF_ROOT="/usr"
+    dnl RHEL 5 has netcdf headers in /usr/include/netcdf-3
+    elif test -d /usr/include/netcdf-3 ; then
+      EXTRA_INCLUDES="-I/usr/include/netcdf-3 $EXTRA_INCLUDES"
+      NETCDF_ROOT="/usr"
+    dnl ubuntu and fedora have netcdf headers in /usr/include
+    elif test -f /usr/include/netcdf.h ; then
+      NETCDF_ROOT="/usr"
+    dnl try /usr/local
+    elif test -f /usr/local/include/netcdf.h ; then
+      NETCDF_ROOT="/usr/local"
     dnl print warning if include cannot be found
     else
       echo "using pre-installed libnetcdf."
@@ -2728,6 +2943,50 @@ if test "$HAVE_MRSID_LIDAR" != "no" ; then
 fi
 
 dnl ---------------------------------------------------------------------------
+dnl Check if LuraTech library is available.
+dnl ---------------------------------------------------------------------------
+
+AC_ARG_WITH(jp2lura,[  --with-j2lura[=ARG]    Include JP2Lua support (ARG=no, lura SDK install path)],,)
+
+AC_MSG_CHECKING([for JP2Lura support])
+
+HAVE_JP2LURA=no
+JP2LURA_INCLUDE=
+
+if test "$with_jp2lura" != "" -a "$with_jp2lura" != "no" ; then
+  AC_MSG_CHECKING([for lwf_jp2.h])
+  if test -f "$with_jp2lura/include/lwf_jp2.h"; then
+    AC_MSG_RESULT([yes])
+  else
+    AC_MSG_RESULT([no])
+    AC_MSG_ERROR([JP2Lura support requested but header not found])
+  fi
+  JP2LURA_INCLUDE="-I$with_jp2lura/include"
+
+  # mingw support
+  if test -f "$with_jp2lura/library/lwf_jp2.lib"; then
+      ln -s "$with_jp2lura/library/lwf_jp2.lib" "$with_jp2lura/library/lib_lwf_jp2.a"
+  fi
+
+  ORIG_LIBS="$LIBS"
+  LIBS="-L$with_jp2lura/library"
+
+  AC_CHECK_LIB(_lwf_jp2,JP2_Decompress_SetLicense,HAVE_JP2LURA="yes",,-lm)
+
+  if test "$HAVE_JP2LURA" = "no" ; then
+    AC_MSG_ERROR([JP2Lura support requested but library not found])
+  fi
+
+  LIBS="-L$with_jp2lura/library -l_lwf_jp2 -lm $ORIG_LIBS"
+fi
+
+AC_SUBST([JP2LURA_INCLUDE], [$JP2LURA_INCLUDE])
+
+if test "$HAVE_JP2LURA" != "no" ; then
+  OPT_GDAL_FORMATS="jp2lura $OPT_GDAL_FORMATS"
+fi
+
+dnl ---------------------------------------------------------------------------
 dnl Enable MSG format if EUMETSAT Wavelet Transform Software
 dnl available in the local tree
 dnl ---------------------------------------------------------------------------
@@ -2819,24 +3078,16 @@ AC_SUBST([OPT_GDAL_FORMATS], [$OPT_GDAL_FORMATS])
 
 dnl ---------------------------------------------------------------------------
 
-dnl Always build with OGR support.
-OGR_ENABLED=yes
-
-dnl ---------------------------------------------------------------------------
-
-GNM_ENABLED=no
+GNM_ENABLED=yes
 
 AC_ARG_WITH(gnm,[  --with-gnm            Build GNM into shared library],,)
 
-if test "$with_gnm" = "" ; then
+if test "$with_gnm" = "no" ; then
   GNM_ENABLED=no
-  echo "GNM support disabled."
-elif test "$with_gnm" = "yes"; then
-  echo checking for GNM ... enabled
-  GNM_ENABLED=yes
+  AC_MSG_RESULT([disabled by user])
 else
-  echo checking for GNM ... disabled by user
-  GNM_ENABLED=no
+  GNM_ENABLED=yes
+  AC_MSG_RESULT([enabled])
 fi
 AC_SUBST(GNM_ENABLED,$GNM_ENABLED)
 
@@ -2869,12 +3120,12 @@ if test "$MYSQL_CONFIG" = "no" ; then
 else
   if test -d $MYSQL_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like ${prefix}/bin/mysql_config.])
+      AC_MSG_ERROR([--with-mysql argument is a directory.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config.])
   fi
 
   if test \! -x $MYSQL_CONFIG ; then
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like ${prefix}/bin/mysql_config.])
+      AC_MSG_ERROR([--with-mysql argument is a not an executable file.  It should be the path to the mysql_config script, often somewhere like /usr/local/bin/mysql_config.])
   fi
 
   MYSQL_VERSION="`$MYSQL_CONFIG --version`"
@@ -2928,7 +3179,7 @@ dnl ---------------------------------------------------------------------------
 dnl Check for Xerces C++ Parser support.
 dnl ---------------------------------------------------------------------------
 
-XERCES_REQ_VERSION="2.7.0"
+XERCES_REQ_VERSION="3.1.0"
 AX_LIB_XERCES($XERCES_REQ_VERSION)
 
 if test "$HAVE_XERCES" = "yes"; then
@@ -3010,12 +3261,12 @@ elif test "$with_odbc" = "yes" -o "$with_odbc" = "" ; then
 #endif
 ])
     if test "$ODBC_SETTING" = "no" ; then
-      if test -f ${prefix}/include/sql.h ; then
+      if test -f /usr/local/include/sql.h ; then
         ODBC_SETTING=yes
-        echo "using sql.h from ${prefix}/include"
-      elif test -f ${prefix}/include/sql.h ; then
+        echo "using sql.h from /usr/local/include"
+      elif test -f /usr/include/sql.h ; then
         ODBC_SETTING=yes
-        echo "using sql.h from ${prefix}/include"
+        echo "using sql.h from /usr/include"
       else
         echo "sql.h not found"
       fi
@@ -3263,8 +3514,8 @@ if test -z "$with_spatialite" -o "$with_spatialite" = "no"; then
 elif test "$with_spatialite" = "yes"; then
     AC_CHECK_HEADERS(sqlite3.h)
     if test "$ac_cv_header_sqlite3_h" = "yes"; then
-        AC_MSG_CHECKING([for spatialite.h in ${prefix}/include or ${prefix}/include])
-        if test -f "${prefix}/include/spatialite.h" -o -f "${prefix}/include/spatialite.h"; then
+        AC_MSG_CHECKING([for spatialite.h in /usr/include or /usr/local/include])
+        if test -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
             AC_MSG_RESULT(found)
             AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,)
             if test "$SPATIALITE_INIT_FOUND" = "yes"; then
@@ -3359,6 +3610,50 @@ AC_SUBST([SQLITE_INC], $SQLITE3_CFLAGS)
 AC_SUBST([HAVE_SQLITE], $HAVE_SQLITE3)
 AC_SUBST([SQLITE_HAS_COLUMN_METADATA], $SQLITE_HAS_COLUMN_METADATA)
 HAVE_SQLITE=$HAVE_SQLITE3
+
+dnl ---------------------------------------------------------------------------
+dnl Check for librasterlite2.
+dnl ---------------------------------------------------------------------------
+
+AC_ARG_WITH(rasterlite2,
+    [  --with-rasterlite2=ARG Include RasterLite2 support (ARG=no(default), yes or path)],
+    ,,)
+
+HAVE_RASTERLITE2=no
+RASTERLITE2_CFLAGS=
+
+if test -z "$with_rasterlite2" -o "$with_rasterlite2" = "no"; then
+    AC_MSG_NOTICE([rasterlite2 support disabled])
+elif test "$with_rasterlite2" = "yes"; then
+    AC_CHECK_HEADERS(rasterlite2/rasterlite2.h)
+    if test "$ac_cv_header_rasterlite2_rasterlite2_h" = "yes"; then
+        AC_CHECK_LIB(rasterlite2,rl2_load_raw_tiles_into_dbms,HAVE_RASTERLITE2=yes,HAVE_RASTERLITE2=no,)
+        if test "$HAVE_RASTERLITE2" = "yes"; then
+            LIBS="$LIBS -lrasterlite2 -lsqlite3"
+        else
+            AC_MSG_ERROR([did not find rl2_load_raw_tiles_into_dbms])
+        fi
+    else
+        AC_MSG_ERROR([did not find rasterlite2.h])
+    fi
+else
+    AC_MSG_CHECKING([for include/rasterlite2/rasterlite2.h])
+    if test -f "$with_rasterlite2/include/rasterlite2/rasterlite2.h"; then
+        AC_MSG_RESULT([found])
+        AC_CHECK_LIB(rasterlite2,rl2_load_raw_tiles_into_dbms,HAVE_RASTERLITE2=yes,HAVE_RASTERLITE2=no,-L$with_rasterlite2/lib)
+        if test "$HAVE_RASTERLITE2" = "yes"; then
+            RASTERLITE2_CFLAGS="-I$with_rasterlite2/include"
+            LIBS="$LIBS -L$with_rasterlite2/lib -lrasterlite2 -lsqlite3"
+        else
+            AC_MSG_ERROR([did not find rl2_load_raw_tiles_into_dbms])
+        fi
+    else
+        AC_MSG_ERROR([did not find rasterlite2.h])
+    fi
+fi
+
+AC_SUBST([HAVE_RASTERLITE2], $HAVE_RASTERLITE2)
+AC_SUBST([RASTERLITE2_CFLAGS], $RASTERLITE2_CFLAGS)
 
 dnl ---------------------------------------------------------------------------
 dnl Check for PCRE.
@@ -3589,7 +3884,7 @@ AC_ARG_WITH(webp,[  --with-webp[=ARG]    Include WEBP support (ARG=no, yes or li
 
 WEBP_SETTING=no
 
-if test "$with_webp" = "yes" ; then
+if test "$with_webp" = "yes" -o "$with_webp" = "" ; then
 
   AC_CHECK_LIB(webp,WebPDecodeRGB,WEBP_SETTING=yes,WEBP_SETTING=no,)
 
@@ -3627,6 +3922,19 @@ if test "${HAVE_GEOS}" = "yes" ; then
   AC_MSG_NOTICE([Using C API from GEOS $GEOS_VERSION])
   LIBS="${GEOS_LIBS} ${LIBS}"
   HAVE_GEOS_RESULT="yes"
+fi
+
+dnl ---------------------------------------------------------------------------
+dnl Check if SFCGAL library is available.
+dnl ---------------------------------------------------------------------------
+
+SFCGAL_INIT(1.2.2)
+HAVE_SFCGAL_RESULT="no"
+if test "${HAVE_SFCGAL}" = "yes" ; then
+
+  AC_MSG_NOTICE([Using C API from SFCGAL $SFCGAL_VERSION])
+  LIBS="${SFCGAL_LIBS} ${LIBS}"
+  HAVE_SFCGAL_RESULT="yes"
 fi
 
 dnl ---------------------------------------------------------------------------
@@ -3864,10 +4172,10 @@ if test "$LIBJSONC_SETTING" = "external" ; then
   LIBS="-ljson-c $LIBS"
   if test "$with_libjson_c" != "" -a "$with_libjson_c" != "yes" -a "$with_libjson_c" != "external" ; then
     JSON_INCLUDE="-I$with_libjson_c/include/json-c"
-  elif test -f "${prefix}/include/json-c/json.h"; then
-    JSON_INCLUDE="-I${prefix}/include/json-c"
-  elif test -f "${prefix}/include/json-c/json.h"; then
-    JSON_INCLUDE="-I${prefix}/include/json-c"
+  elif test -f "/usr/include/json-c/json.h"; then
+    JSON_INCLUDE="-I/usr/include/json-c"
+  elif test -f "/usr/local/include/json-c/json.h"; then
+    JSON_INCLUDE="-I/usr/local/include/json-c"
   else
     AC_MSG_ERROR([could not find json-c/json.h])
   fi
@@ -3938,7 +4246,7 @@ AC_MSG_CHECKING([for poppler])
 if test "$with_poppler" != "no" -a "$with_poppler" != ""; then
 
     if test "$with_poppler" = "yes" ; then
-        TEST_POPPLER_INC="-I${prefix}/include -I${prefix}/include/poppler"
+        TEST_POPPLER_INC="-I/usr/include -I/usr/include/poppler"
         TEST_POPPLER_LIB="-lpoppler"
     else
         TEST_POPPLER_INC="-I$with_poppler/include -I$with_poppler/include/poppler"
@@ -4067,7 +4375,7 @@ if test "$with_podofo" != "no" -a "$with_podofo" != ""; then
       [  --with-podofo-lib=ARG   podofo Link Flags (i.e. -L/xxx -lpodofo ...). Mainly for static libpodofo],,,)
 
     if test "$with_podofo" = "yes" ; then
-        TEST_PODOFO_INC="-I${prefix}/include -I${prefix}/include/podofo"
+        TEST_PODOFO_INC="-I/usr/include -I/usr/include/podofo"
         PODOFO_LIB="-lpodofo"
     else
         TEST_PODOFO_INC="-I$with_podofo/include -I$with_podofo/include/podofo"
@@ -4158,9 +4466,9 @@ if test "$with_pdfium" != "no" -a "$with_pdfium" != ""; then
       [  --with-pdfium-lib=ARG   pdfium Link Flags (i.e. -L/xxx -lpdfium ...). Mainly for static libpdfium],,,)
 
     if test "$with_pdfium" = "yes" ; then
-        TEST_PDFIUM_INC="-I${prefix}/include -I${prefix}/include/pdfium"
+        TEST_PDFIUM_INC="-I/usr/include -I/usr/include/pdfium"
         PDFIUM_LIB="-lpdfium"
-        PDFIUM_LIBDIR="${prefix}"
+        PDFIUM_LIBDIR="/usr"
     else
         TEST_PDFIUM_INC="-I$with_pdfium -I$with_pdfium/include -I$with_pdfium/include/pdfium"
         PDFIUM_LIB="-L$with_pdfium -L$with_pdfium/lib -lpdfium"
@@ -4180,7 +4488,7 @@ if test "$with_pdfium" != "no" -a "$with_pdfium" != ""; then
         if test ! -z "`uname | grep Darwin`" ; then
           TEST_CXX_FLAGS="$TEST_CXX_FLAGS -stdlib=libstdc++"
         fi
-        if test -z "`${CXX} $TEST_CXX_FLAGS testpdfium.cpp -o testpdfium ${TEST_PDFIUM_INC} ${PDFIUM_LIB}  2>&1`" ; then
+        if ${CXX} $TEST_CXX_FLAGS testpdfium.cpp -o testpdfium ${TEST_PDFIUM_INC} ${PDFIUM_LIB} >/dev/null 2>/dev/null; then
             HAVE_PDFIUM=yes
             CXXFLAGS="$TEST_CXX_FLAGS $CXXFLAGS"
             if test "$PDF_PLUGIN" = "no"; then
@@ -4224,7 +4532,7 @@ if test "$with_pdfium" != "no" -a "$with_pdfium" != ""; then
         if test ! -z "`uname | grep Darwin`" ; then
           TEST_CXX_FLAGS="$TEST_CXX_FLAGS -stdlib=libstdc++"
         fi
-        if test -z "`${CXX} $TEST_CXX_FLAGS testpdfium.cpp -o testpdfium ${TEST_PDFIUM_INC} ${TEST_PDFIUM_LIB} 2>&1`" ; then
+        if ${CXX} $TEST_CXX_FLAGS testpdfium.cpp -o testpdfium ${TEST_PDFIUM_INC} ${TEST_PDFIUM_LIB} >/dev/null 2>/dev/null; then
             HAVE_PDFIUM=yes
             CXXFLAGS="$TEST_CXX_FLAGS $CXXFLAGS"
             if test "$PDF_PLUGIN" = "no"; then
@@ -4238,6 +4546,10 @@ if test "$with_pdfium" != "no" -a "$with_pdfium" != ""; then
         fi
         rm -f testpdfium.*
         rm -f testpdfium
+    fi
+
+    if test "$HAVE_PDFIUM" = "no" -a "$with_pdfium" != ""; then
+        AC_MSG_ERROR([pdfium requested but not found])
     fi
 else
     AC_MSG_RESULT([disabled])
@@ -4366,7 +4678,7 @@ if test ! -z "`uname | grep Darwin`" ; then
   LIBS="$ARCHFLAGS $LIBS"
 
   MACOSX_FRAMEWORK=no
-  AC_ARG_WITH(,[  --with-macosx-framework         Build and install GDAL as a Mac OS X Framework],,)
+  AC_ARG_WITH(macosx-framework,[  --with-macosx-framework         Build and install GDAL as a Mac OS X Framework],,)
   AC_MSG_CHECKING([for Mac OS X Framework build])
   if test "$with_macosx_framework" = yes ; then
     MACOSX_FRAMEWORK=yes
@@ -4414,8 +4726,8 @@ BINTRUE=/bin/true
 if test -f /bin/true.exe ; then
   BINTRUE=/bin/true.exe
 fi
-if test -f ${prefix}/bin/true ; then
-  BINTRUE=${prefix}/bin/true
+if test -f /usr/bin/true ; then
+  BINTRUE=/usr/bin/true
 fi
 
 export BINTRUE
@@ -4437,16 +4749,16 @@ fi
 
 dnl ---------------------------------------------------------------------------
 dnl By default mandir is $datarootdir/man which would be
-dnl ${prefix}/share/gdal/man but we want man pages in ${prefix}/man.
+dnl /usr/local/share/gdal/man but we want man pages in /usr/local/man.
 dnl ---------------------------------------------------------------------------
-mandir='${prefix}/share/man'
+mandir='${prefix}/man'
 
 dnl ---------------------------------------------------------------------------
 dnl Capture GDAL_PREFIX for the cpl_config.h include file.
 dnl ---------------------------------------------------------------------------
 
 if test "$prefix" = "NONE" ; then
-  GDAL_PREFIX=${prefix}
+  GDAL_PREFIX=/usr/local
 else
   GDAL_PREFIX=${prefix}
 fi
@@ -4561,42 +4873,48 @@ if test "x$with_java" = "xyes"; then
 dnl Ubuntu
     JAVA_6_TEST_DIR=
     JAVA_7_TEST_DIR=
+    JAVA_8_TEST_DIR=
     JAVA_MAC_TEST_DIR=
     case "$host_cpu" in
         i*86*)
-            JAVA_6_TEST_DIR=${prefix}/lib/jvm/java-6-openjdk-i386
-            JAVA_7_TEST_DIR=${prefix}/lib/jvm/java-7-openjdk-i386
+            JAVA_6_TEST_DIR=/usr/lib/jvm/java-6-openjdk-i386
+            JAVA_7_TEST_DIR=/usr/lib/jvm/java-7-openjdk-i386
+            JAVA_8_TEST_DIR=/usr/lib/jvm/java-8-openjdk-i386
             ;;
         x86_64*)
-            JAVA_6_TEST_DIR=${prefix}/lib/jvm/java-6-openjdk-amd64
-            JAVA_7_TEST_DIR=${prefix}/lib/jvm/java-7-openjdk-amd64
+            JAVA_6_TEST_DIR=/usr/lib/jvm/java-6-openjdk-amd64
+            JAVA_7_TEST_DIR=/usr/lib/jvm/java-7-openjdk-amd64
+            JAVA_8_TEST_DIR=/usr/lib/jvm/java-8-openjdk-amd64
             ;;
         *)
             ;;
     esac
     case "${host_os}" in
       darwin*)
-        JAVA_MAC_TEST_DIR=$(${prefix}/libexec/java_home)
+        JAVA_MAC_TEST_DIR=$(/usr/libexec/java_home)
         ;;
     esac
 
-    if test "x$JAVA_7_TEST_DIR" != "x" -a -d "$JAVA_7_TEST_DIR/include"; then
+    if test "x$JAVA_8_TEST_DIR" != "x" -a -d "$JAVA_8_TEST_DIR/include"; then
+        with_java="$JAVA_8_TEST_DIR"
+
+    elif test "x$JAVA_7_TEST_DIR" != "x" -a -d "$JAVA_7_TEST_DIR/include"; then
         with_java="$JAVA_7_TEST_DIR"
 
     elif test "x$JAVA_6_TEST_DIR" != "x" -a -d "$JAVA_6_TEST_DIR/include"; then
         with_java="$JAVA_6_TEST_DIR"
 
-    elif test -d ${prefix}/lib/jvm/java-6-openjdk; then
-        with_java="${prefix}/lib/jvm/java-6-openjdk"
+    elif test -d /usr/lib/jvm/java-6-openjdk; then
+        with_java="/usr/lib/jvm/java-6-openjdk"
 
 dnl RHEL6
-    elif test -d ${prefix}/lib/jvm/java-openjdk; then
-        with_java="${prefix}/lib/jvm/java-openjdk"
+    elif test -d /usr/lib/jvm/java-openjdk; then
+        with_java="/usr/lib/jvm/java-openjdk"
 
 
 dnl OpenSolaris
-    elif test -d ${prefix}/java; then
-        with_java="${prefix}/java"
+    elif test -d /usr/java; then
+        with_java="/usr/java"
 
 dnl Mac OS X
     elif test "x$JAVA_MAC_TEST_DIR" != "x"; then
@@ -4677,11 +4995,14 @@ if test "$with_mdb" = "yes" ; then
         AC_MSG_ERROR("--with-java must be specified.")
     fi
 
-    AC_ARG_WITH(jvm-lib,          [  --with-jvm-lib=[ARG]        ARG points to Java libjvm path],,)
+    AC_ARG_WITH(jvm-lib,          [  --with-jvm-lib=[ARG]        ARG is dlopen or points to Java libjvm path],,)
 
     AC_ARG_WITH(jvm-lib-add-rpath,[  --with-jvm-lib-add-rpath    Add the libjvm path to the RPATH (no by default)],,)
 
-    if test "x$with_jvm_lib" != "x"; then
+    if test "x$with_jvm_lib" = "xdlopen"; then
+        AC_DEFINE_UNQUOTED(JVM_LIB_DLOPEN, 1, [Define to 1 if libjvm.so should be dlopen'd])
+        JVM_LIB="-ldl"
+    elif test "x$with_jvm_lib" != "x"; then
         if test -d "$with_jvm_lib"; then
             saved_LDFLAGS="$LDFLAGS"
             LDFLAGS="$LDFLAGS -L$with_jvm_lib"
@@ -5058,6 +5379,7 @@ LOC_MSG()
 LOC_MSG([  Installation directory:    ${prefix}])
 LOC_MSG([  C compiler:                ${CC} ${CFLAGS}])
 LOC_MSG([  C++ compiler:              ${CXX} ${CXXFLAGS}])
+LOC_MSG([  C++11 support:             ${CXX11_SUPPORT}])
 LOC_MSG()
 LOC_MSG([  LIBTOOL support:           ${with_libtool}])
 LOC_MSG()
@@ -5091,6 +5413,7 @@ LOC_MSG([  OpenJPEG support:          ${HAVE_OPENJPEG}])
 LOC_MSG([  ECW support:               ${ECW_SETTING}])
 LOC_MSG([  MrSID support:             ${HAVE_MRSID}])
 LOC_MSG([  MrSID/MG4 Lidar support:   ${HAVE_MRSID_LIDAR}])
+LOC_MSG([  JP2Lura support:           ${HAVE_JP2LURA}])
 LOC_MSG([  MSG support:               ${HAVE_MSG}])
 LOC_MSG([  GRIB support:              ${HAVE_GRIB}])
 LOC_MSG([  EPSILON support:           ${EPSILON_SETTING}])
@@ -5121,9 +5444,11 @@ LOC_MSG([  SpatiaLite support:        ${HAVE_SPATIALITE}])
 if test "x$SPATIALITE_SONAME" != "x"; then
 LOC_MSG([  SpatiaLite shared obj name:${SPATIALITE_SONAME}])
 fi
+LOC_MSG([  RasterLite2 support:       ${HAVE_RASTERLITE2}])
 LOC_MSG([  DWGdirect support          ${HAVE_DWGDIRECT}])
 LOC_MSG([  INFORMIX DataBlade support:${HAVE_IDB}])
 LOC_MSG([  GEOS support:              ${HAVE_GEOS_RESULT}])
+LOC_MSG([  SFCGAL support:            ${HAVE_SFCGAL_RESULT}])
 LOC_MSG([  QHull support:             ${QHULL_SETTING}])
 LOC_MSG([  Poppler support:           ${HAVE_POPPLER}])
 LOC_MSG([  Podofo support:            ${HAVE_PODOFO}])
