@@ -53,10 +53,10 @@ AC_DEFUN([AX_LIB_LIBKML],
         ),
         [
         if test "$withval" = "yes"; then
-            if test -d /usr/local/include/kml ; then
-                libkml_prefix=/usr/local
-            elif test -d /usr/include/kml ; then
-                libkml_prefix=/usr
+            if test -d ${prefix}/local/include/kml ; then
+                libkml_prefix=${prefix}/local
+            elif test -d ${prefix}/include/kml ; then
+                libkml_prefix=${prefix}
             else
                 libkml_prefix=""
             fi
@@ -71,10 +71,10 @@ AC_DEFUN([AX_LIB_LIBKML],
         ],
         [
         dnl Default behavior is implicit yes
-        if test -d /usr/local/include/kml ; then
-            libkml_prefix=/usr/local
-        elif test -d /usr/include/kml ; then
-            libkml_prefix=/usr
+        if test -d ${prefix}/local/include/kml ; then
+            libkml_prefix=${prefix}/local
+        elif test -d ${prefix}/include/kml ; then
+            libkml_prefix=${prefix}
         else
             libkml_prefix=""
         fi
@@ -169,7 +169,7 @@ kmldom::KmlFactory* factory = kmldom::KmlFactory::GetFactory();
             libkml_include_dir="$libkml_prefix/include"
             libkml_include_dir2="$libkml_prefix/include/kml"
             libkml_include_dir3="$libkml_prefix/include/kml/third_party/boost_1_34_1"
-            if test "$libkml_prefix" = "/usr"; then
+            if test "$libkml_prefix" = "${prefix}"; then
                 libkml_lib_flags="-lkmldom -lkmlbase -lkmlengine -lkmlconvenience -lminizip -luriparser"
             else
                 libkml_lib_flags="-L$libkml_prefix/lib -lkmldom -lkmlbase -lkmlengine -lkmlconvenience -lminizip -luriparser"

@@ -614,6 +614,26 @@ void CPL_DLL GDALTriangulationFree(GDALTriangulation* psDT);
 void GDALTriangulationTerminate(void);
 /*! @endcond */
 
+/************************************************************************/
+/*  Isoband generation interface.                                       */
+/************************************************************************/
+
+typedef enum {
+    GIST_None        = 0x00,
+    GIST_SampleCount = 0x01,
+    GIST_Mean        = 0x02,
+    GIST_StdDev      = 0x04,
+    GIST_Minimum     = 0x08,
+    GIST_Maximum     = 0x10,
+    GIST_Coverage    = 0x20
+} GDALIsobandStatistic;
+
+CPLErr CPL_DLL GDALIsobandGenerate(
+    GDALRasterBandH hRasterBand, void *hContourLayer,
+    void *hBoundaryLayer, void *hIsobandLayer, int nInfoToCalculate,
+    int bAllTouched, char **papszOptions, GDALProgressFunc pfnProgress,
+    void *pProgressArg);
+
 CPL_C_END
 
 #endif /* ndef GDAL_ALG_H_INCLUDED */

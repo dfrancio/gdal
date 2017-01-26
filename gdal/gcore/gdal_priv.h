@@ -1183,6 +1183,12 @@ class CPL_DLL GDALDriver : public GDALMajorObject
                                      GDALProgressFunc pfnProgress,
                                      void * pProgressData ) CPL_WARN_UNUSED_RESULT;
 
+    GDALDataset         *CreateCopyEx( const char *, GDALDataset *, 
+                                       int, char **,
+                                       GDALProgressFunc pfnProgress, 
+                                       void * pProgressData,
+                                       char ** papszLayerOptions ) CPL_WARN_UNUSED_RESULT;
+
 /* -------------------------------------------------------------------- */
 /*      The following are semiprivate, not intended to be accessed      */
 /*      by anyone but the formats instantiating and populating the      */
@@ -1238,6 +1244,11 @@ class CPL_DLL GDALDriver : public GDALMajorObject
                                             int, char **,
                                             GDALProgressFunc pfnProgress,
                                             void * pProgressData ) CPL_WARN_UNUSED_RESULT;
+    GDALDataset         *DefaultCreateCopyEx( const char *, GDALDataset *, 
+                                              int, char **,
+                                              GDALProgressFunc pfnProgress, 
+                                              void * pProgressData,
+                                              char ** papszLayerOptions ) CPL_WARN_UNUSED_RESULT;
     static CPLErr        DefaultCopyMasks( GDALDataset *poSrcDS,
                                            GDALDataset *poDstDS,
                                            int bStrict );

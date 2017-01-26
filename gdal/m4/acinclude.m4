@@ -227,14 +227,14 @@ AC_DEFUN([AC_COMPILER_LOCALHACK],
   rm -f comp.out
   echo 'int main() { int i = 1; if( *((unsigned char *) &i) == 0 ) printf( "BIGENDIAN"); return 0; }' >> conftest.c
   ${CC} $CPPFLAGS $EXTRA_INCLUDES -o conftest conftest.c 2> comp.out
-  COMP_CHECK=`grep "system directory" comp.out | grep /usr/local/include`
+  COMP_CHECK=`grep "system directory" comp.out | grep ${prefix}/local/include`
   if test -z "$COMP_CHECK" ; then 
      AC_MSG_RESULT([no, everything is ok])
   else
      AC_MSG_RESULT([yes, stripping extras])
-     CXXFLAGS=`echo "$CXXFLAGS " | sed "s/-I\/usr\/local\/include //"`
-     CFLAGS=`echo "$CFLAGS " | sed "s/-I\/usr\/local\/include //"`
-     EXTRA_INCLUDES=`echo "$EXTRA_INCLUDES " | sed "s/-I\/usr\/local\/include //"`
+     CXXFLAGS=`echo "$CXXFLAGS " | sed "s/-I\${prefix}\/local\/include //"`
+     CFLAGS=`echo "$CFLAGS " | sed "s/-I\${prefix}\/local\/include //"`
+     EXTRA_INCLUDES=`echo "$EXTRA_INCLUDES " | sed "s/-I\${prefix}\/local\/include //"`
   fi 
   rm -f comp.out
 ])
@@ -425,14 +425,14 @@ AC_DEFUN([AC_LD_SHARED],
   if test "$LD_SHARED" = "/bin/true" ; then
     echo "checking for ld -shared ... no"
     if test ! -x /bin/true ; then
-      LD_SHARED=/usr/bin/true
+      LD_SHARED=${prefix}/bin/true
     fi
   fi
   if test "$LD_SHARED" = "no" ; then
     if test -x /bin/true ; then
       LD_SHARED=/bin/true
     else
-      LD_SHARED=/usr/bin/true
+      LD_SHARED=${prefix}/bin/true
     fi
   fi
 
